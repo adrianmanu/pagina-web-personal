@@ -116,20 +116,20 @@ const PROJECTS: Project[] = [
     company: 'Portafolio Personal',
     period: '2026',
     description:
-      'API REST con Spring Boot para gestión de inventario, productos y stock con MySQL.',
+      'Plataforma full stack con Spring Boot y React para gestión de inventario, productos y stock.',
     longDescription:
-      'Backend escalable con patrones Repository/Service/Controller, validación de datos y documentación Swagger.',
-    technologies: ['Spring Boot', 'Java', 'MySQL', 'Swagger', 'JUnit'],
+      'Backend con JWT, validación y arquitectura en capas. Frontend React con login, dashboard y CRUD de productos.',
+    technologies: ['Spring Boot', 'Java', 'React', 'JWT', 'Swagger'],
     category: 'api',
     featured: true,
     githubPath: 'projects/inventory-api',
-    liveUrl: 'demos/inventory-api/',
+    liveUrl: 'apps/inventory-api/',
     imageGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     highlights: [
+      'Login y registro con JWT',
       'CRUD completo de productos e inventario',
-      'Arquitectura en capas con Clean Code',
-      'Documentación automática con Swagger/OpenAPI',
-      'Tests unitarios con JUnit y Mockito',
+      'Dashboard con KPIs y resumen por categoría',
+      'Arquitectura Spring Boot + React',
     ],
   },
   {

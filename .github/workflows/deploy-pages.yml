@@ -64,6 +64,17 @@ jobs:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/automatizacion-datos/
           VITE_API_URL: ${{ vars.AUTOMATIZACION_API_URL || secrets.AUTOMATIZACION_API_URL }}
 
+      - name: Instalar dependencias inventario
+        run: npm ci
+        working-directory: projects/inventory-api/frontend
+
+      - name: Build inventario frontend
+        run: npm run build
+        working-directory: projects/inventory-api/frontend
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/inventory-api/
+          VITE_API_URL: ${{ vars.INVENTORY_API_URL || secrets.INVENTORY_API_URL }}
+
       - name: Preparar sitio para GitHub Pages
         run: |
           mkdir -p deploy
@@ -72,6 +83,8 @@ jobs:
           cp -r projects/metrics-dashboard/dist/* deploy/metrics-dashboard/
           mkdir -p deploy/apps/automatizacion-datos
           cp -r projects/automatizacion-datos/frontend/dist/* deploy/apps/automatizacion-datos/
+          mkdir -p deploy/apps/inventory-api
+          cp -r projects/inventory-api/frontend/dist/* deploy/apps/inventory-api/
 
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3

@@ -43,11 +43,27 @@ rmSync(autoTarget, { recursive: true, force: true });
 mkdirSync(autoTarget, { recursive: true });
 cpSync(resolve(autoData, 'dist'), autoTarget, { recursive: true });
 
+console.log('📦 Compilando inventario...');
+const inventory = resolve(root, 'projects/inventory-api/frontend');
+if (!existsSync(resolve(inventory, 'node_modules'))) {
+  execSync('npm install', { cwd: inventory, stdio: 'inherit' });
+}
+execSync('npm run build', {
+  cwd: inventory,
+  stdio: 'inherit',
+  env: { ...process.env, VITE_BASE_PATH: '/apps/inventory-api/' },
+});
+const inventoryTarget = resolve(deploy, 'apps/inventory-api');
+rmSync(inventoryTarget, { recursive: true, force: true });
+mkdirSync(inventoryTarget, { recursive: true });
+cpSync(resolve(inventory, 'dist'), inventoryTarget, { recursive: true });
+
 const backend = await startBackend();
 
 console.log('\n✅ Build listo. Iniciando servidor con proxy API...\n');
 console.log('   Portafolio:        http://localhost:4173/');
 console.log('   Automatización:    http://localhost:4173/apps/automatizacion-datos/');
+console.log('   Inventario:        http://localhost:4173/apps/inventory-api/');
 console.log('   Dashboard:         http://localhost:4173/metrics-dashboard/');
 console.log('   API (proxy):       http://localhost:4173/api/');
 console.log('   Descargar APK:     http://localhost:4173/downloads/app-debug.apk\n');

@@ -1,10 +1,6 @@
 package com.adrian.inventory.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
@@ -14,6 +10,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     private String name;
     private String sku;
     private Integer stock;
@@ -22,16 +22,10 @@ public class Product {
 
     public Product() {}
 
-    public Product(String name, String sku, Integer stock, Double price, String category) {
-        this.name = name;
-        this.sku = sku;
-        this.stock = stock;
-        this.price = price;
-        this.category = category;
-    }
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getSku() { return sku; }

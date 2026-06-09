@@ -70,9 +70,10 @@ export function startStaticWithProxy({
       // SPA fallback
     }
 
-    const spaFallback =
-      urlPath.startsWith('/apps/automatizacion-datos')
-        ? '/apps/automatizacion-datos/index.html'
+    const spaFallback = urlPath.startsWith('/apps/automatizacion-datos')
+      ? '/apps/automatizacion-datos/index.html'
+      : urlPath.startsWith('/apps/inventory-api')
+        ? '/apps/inventory-api/index.html'
         : urlPath.startsWith('/metrics-dashboard')
           ? '/metrics-dashboard/index.html'
           : '/index.html';

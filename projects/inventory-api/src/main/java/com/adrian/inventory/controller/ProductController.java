@@ -1,8 +1,13 @@
 package com.adrian.inventory.controller;
 
-import com.adrian.inventory.model.Product;
+import com.adrian.inventory.dto.InventorySummary;
+import com.adrian.inventory.dto.ProductRequest;
+import com.adrian.inventory.dto.ProductResponse;
+import com.adrian.inventory.security.UserPrincipal;
 import com.adrian.inventory.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,29 +23,39 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAll() {
-        return productService.findAll();
+    public List<ProductResponse> getAll(@AuthenticationPrincipal UserPrincipal principal) {
+        return productService.findAll(principal.getUser());
+    }
+
+    @GetMapping("/summary")
+    public InventorySummary getSummary(@AuthenticationPrincipal UserPrincipal principal) {
+        return productService.getSummary(principal.getUser());
     }
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
-        return productService.findById(id);
+    public ProductResponse getById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+        return productService.findById(id, principal.getUser());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody Product product) {
-        return productService.create(product);
+    public ProductResponse create(
+            @Valid @RequestBody ProductRequest request,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        return productService.create(request, principal.getUser());
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return productService.update(id, product);
+    public ProductResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductRequest request,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        return productService.update(id, request, principal.getUser());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        productService.delete(id);
+    public void delete(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+        productService.delete(id, principal.getUser());
     }
 }

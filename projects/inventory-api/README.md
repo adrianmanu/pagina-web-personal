@@ -1,40 +1,59 @@
-# API de Inventario Empresarial
+# API de Inventario Empresarial v2
 
-API REST con Spring Boot, arquitectura en capas (Controller → Service → Repository) y documentación Swagger.
+Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 
-## Requisitos
+## Stack
 
-- Java 17+
-- Maven 3.8+
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | React 18, TypeScript, React Router |
+| Backend | Spring Boot 3.4, Spring Security, JWT |
+| Base de datos | H2 (dev) / MySQL (prod) |
 
-## Ejecución
+## Funcionalidades
+
+- Registro e inicio de sesión con JWT
+- Dashboard con KPIs de inventario
+- CRUD de productos (nombre, SKU, stock, precio, categoría)
+- Resumen por categoría
+- Documentación Swagger
+
+## Ejecución local
+
+### Backend (puerto 8080)
 
 ```bash
 cd projects/inventory-api
 mvn spring-boot:run
 ```
 
-- API: `http://localhost:8080/api/products`
-- Swagger: `http://localhost:8080/swagger-ui.html`
-- H2 Console: `http://localhost:8080/h2-console`
+API docs: http://localhost:8080/swagger-ui.html
 
-## MySQL (producción)
+### Frontend (puerto 5176)
 
-En `application.properties`:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/inventory_db
-spring.datasource.username=root
-spring.datasource.password=tu_password
-spring.jpa.hibernate.ddl-auto=update
+```bash
+cd projects/inventory-api/frontend
+npm install
+npm run dev
 ```
 
-## Endpoints
+Abre: http://localhost:5176
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/products` | Listar productos |
-| GET | `/api/products/{id}` | Obtener producto |
-| POST | `/api/products` | Crear producto |
-| PUT | `/api/products/{id}` | Actualizar producto |
-| DELETE | `/api/products/{id}` | Eliminar producto |
+## Arquitectura
+
+```
+backend/src/main/java/com/adrian/inventory/
+├── controller/   # REST endpoints
+├── service/      # Lógica de negocio
+├── repository/   # Spring Data JPA
+├── model/        # Entidades
+├── dto/          # Request/Response
+├── security/     # JWT + filtros
+└── config/       # Security, CORS
+
+frontend/src/
+├── api/          # Cliente HTTP
+├── context/      # Auth
+├── pages/        # Login, Dashboard, Productos
+└── components/   # UI reutilizable
+```
