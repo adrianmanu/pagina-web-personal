@@ -75,6 +75,10 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
       <section className="auth-form-side">
         <div className="auth-form-wrapper">
           <div className="auth-card">
+            <div className="auth-card__badge">
+              <Database size={15} />
+              <span>DataFlow</span>
+            </div>
             <header className="auth-form-header">
               <h1>{title}</h1>
               <p>{subtitle}</p>
