@@ -1,5 +1,5 @@
 window.PORTFOLIO_CONFIG = {
-  githubUser: 'TU_USUARIO',
+  githubUser: 'adrianmanu',
   githubRepo: 'pagina-web-personal',
 };
 
