@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory API — Demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">Spring Boot · Java · MySQL</span>
+    <h1>API de Inventario Empresarial</h1>
+    <p class="subtitle">REST API con arquitectura en capas para gestión de productos e inventario.</p>
+
+    <div class="card">
+      <h2>Ejecutar localmente</h2>
+      <pre>cd projects/inventory-api
+mvn spring-boot:run</pre>
+      <p>Swagger UI: <code>http://localhost:8080/swagger-ui.html</code></p>
+      <a class="btn btn-primary" data-github-path="projects/inventory-api" target="_blank" rel="noopener">Ver código en GitHub</a>
+    </div>
+
+    <div class="card">
+      <h2>Endpoints principales</h2>
+      <pre>GET    /api/products
+POST   /api/products
+PUT    /api/products/{id}
+DELETE /api/products/{id}</pre>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+</body>
+</html>

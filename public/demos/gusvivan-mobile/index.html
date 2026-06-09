@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GUSVIVAN Mobile — Demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">Android · Kotlin · Firebase</span>
+    <h1>App de Control de Rondas y Parqueaderos</h1>
+    <p class="subtitle">Aplicación móvil nativa para seguridad y auditorías en tiempo real.</p>
+
+    <div class="card">
+      <h2>Descargar e instalar</h2>
+      <p>Descarga el APK y actívalo en tu dispositivo Android (permite instalación de fuentes desconocidas si es necesario).</p>
+      <a class="btn btn-primary" id="apk-link" href="#" download>Descargar APK</a>
+    </div>
+
+    <div class="card">
+      <h2>Funcionalidades</h2>
+      <ul>
+        <li>Control de rondas de seguridad</li>
+        <li>Gestión de parqueaderos</li>
+        <li>Sincronización en tiempo real con Firebase</li>
+        <li>Captura y subida de evidencias con Cloudinary</li>
+        <li>Exportación de reportes PDF y Excel</li>
+      </ul>
+      <div class="tech">
+        <span>Kotlin</span><span>Jetpack Compose</span><span>Firebase</span><span>Cloudinary</span>
+      </div>
+    </div>
+
+    <div class="note">
+      Tip: graba un video demo de la app y agrégalo en el portafolio con el botón "Ver demo" para reclutadores que no instalen APK.
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+  <script>
+    document.getElementById('apk-link').href =
+      window.location.pathname.split('/demos/')[0] + '/downloads/app-debug.apk';
+  </script>
+</body>
+</html>

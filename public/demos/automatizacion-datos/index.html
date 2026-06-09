@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automatización de Datos — Demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">Python · ETL · PostgreSQL</span>
+    <h1>Automatización de Datos Empresariales</h1>
+    <p class="subtitle">Pipeline ETL que extrae datos de APIs REST y genera reportes analíticos.</p>
+
+    <div class="card">
+      <h2>Ejecutar localmente</h2>
+      <pre>cd projects/automatizacion-datos
+pip install -r requirements.txt
+python main.py</pre>
+      <a class="btn btn-primary" data-github-path="projects/automatizacion-datos" target="_blank" rel="noopener">Ver código en GitHub</a>
+    </div>
+
+    <div class="card">
+      <h2>Qué hace el pipeline</h2>
+      <ul>
+        <li>Extrae 50 registros desde APIs REST públicas</li>
+        <li>Almacena en SQLite o PostgreSQL con SQLAlchemy</li>
+        <li>Genera resumen analítico por cliente</li>
+        <li>Exporta reportes CSV y JSON en /reports</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      GitHub Pages publica el portafolio y demos web. Las APIs y scripts Python se ejecutan en tu máquina siguiendo el README del proyecto.
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+</body>
+</html>

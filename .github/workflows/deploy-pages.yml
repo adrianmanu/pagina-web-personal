@@ -1,0 +1,77 @@
+name: Deploy Portafolio y Demos
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Configurar enlaces de GitHub en demos
+        run: |
+          USER=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+          REPO=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          sed -i "s/TU_USUARIO/${USER}/g" public/demos/config.js
+          sed -i "s/pagina-web-personal/${REPO}/g" public/demos/config.js
+
+      - name: Instalar dependencias del portafolio
+        run: npm ci
+
+      - name: Build portafolio
+        run: npm run build
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_GITHUB_REPO: ${{ github.repository }}
+
+      - name: Instalar dependencias del dashboard
+        run: npm ci
+        working-directory: projects/metrics-dashboard
+
+      - name: Build dashboard
+        run: npm run build
+        working-directory: projects/metrics-dashboard
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/metrics-dashboard/
+
+      - name: Preparar sitio para GitHub Pages
+        run: |
+          mkdir -p deploy
+          cp -r dist/* deploy/
+          mkdir -p deploy/metrics-dashboard
+          cp -r projects/metrics-dashboard/dist/* deploy/metrics-dashboard/
+
+      - name: Subir artefacto
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: deploy
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
