@@ -8,7 +8,7 @@ Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 |------|-----------|
 | Frontend | React 18, TypeScript, React Router |
 | Backend | Spring Boot 3.4, Spring Security, JWT |
-| Base de datos | H2 (dev) / MySQL (prod) |
+| Base de datos | H2 (dev) / PostgreSQL (prod) |
 
 ## Funcionalidades
 
@@ -17,6 +17,7 @@ Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 - Dashboard con KPIs de inventario y ventas
 - CRUD de productos (nombre, SKU, stock, precio, categoría)
 - **Facturación**: emisión de facturas con descuento automático de stock
+- Facturas a **consumidor final** o con **datos completos** (nombre, cédula/RUC, correo, dirección)
 - Validación de stock insuficiente al vender
 - Reposición rápida de stock sin editar el producto
 - Resumen por categoría e historial de facturas con detalle

@@ -33,8 +33,24 @@ public class InvoiceService {
     public InvoiceResponse create(InvoiceRequest request, User user) {
         Invoice invoice = new Invoice();
         invoice.setUser(user);
-        invoice.setCustomerName(request.customerName().trim());
         invoice.setCreatedAt(LocalDateTime.now());
+
+        if (request.finalConsumer()) {
+            invoice.setFinalConsumer(true);
+            invoice.setCustomerName("Consumidor Final");
+        } else {
+            if (request.customerName() == null || request.customerName().isBlank()) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "El nombre del cliente es obligatorio");
+            }
+            if (request.customerTaxId() == null || request.customerTaxId().isBlank()) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "La cédula o RUC del cliente es obligatoria");
+            }
+            invoice.setFinalConsumer(false);
+            invoice.setCustomerName(request.customerName().trim());
+            invoice.setCustomerTaxId(request.customerTaxId().trim());
+            invoice.setCustomerEmail(blankToNull(request.customerEmail()));
+            invoice.setCustomerAddress(blankToNull(request.customerAddress()));
+        }
 
         double total = 0;
         for (InvoiceItemRequest itemRequest : request.items()) {
@@ -88,5 +104,9 @@ public class InvoiceService {
                 .sum();
 
         return new SalesSummary(invoices.size(), itemsSold, Math.round(revenue * 100.0) / 100.0);
+    }
+
+    private static String blankToNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 }

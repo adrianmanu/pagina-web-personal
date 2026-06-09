@@ -109,14 +109,22 @@ export interface InvoiceItem {
 
 export interface Invoice {
   id: number;
+  finalConsumer: boolean;
   customerName: string;
+  customerTaxId: string | null;
+  customerEmail: string | null;
+  customerAddress: string | null;
   createdAt: string;
   total: number;
   items: InvoiceItem[];
 }
 
 export interface InvoiceInput {
-  customerName: string;
+  finalConsumer: boolean;
+  customerName?: string;
+  customerTaxId?: string;
+  customerEmail?: string;
+  customerAddress?: string;
   items: { productId: number; quantity: number }[];
 }
 

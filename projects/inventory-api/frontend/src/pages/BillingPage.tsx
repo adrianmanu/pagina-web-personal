@@ -1,5 +1,5 @@
 import { FormEvent, Fragment, useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, Trash2, User, Users } from 'lucide-react';
 import { api, type Invoice, type Product } from '../api/client';
 
 interface Line {
@@ -8,11 +8,13 @@ interface Line {
 }
 
 const emptyLine: Line = { productId: '', quantity: 1 };
+const emptyCustomer = { customerName: '', customerTaxId: '', customerEmail: '', customerAddress: '' };
 
 export function BillingPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [customerName, setCustomerName] = useState('');
+  const [finalConsumer, setFinalConsumer] = useState(true);
+  const [customer, setCustomer] = useState(emptyCustomer);
   const [lines, setLines] = useState<Line[]>([{ ...emptyLine }]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -54,12 +56,26 @@ export function BillingPage() {
       setError('Agrega al menos un producto a la factura.');
       return;
     }
+    if (!finalConsumer) {
+      if (!customer.customerName.trim()) {
+        setError('Ingresa el nombre del cliente.');
+        return;
+      }
+      if (!customer.customerTaxId.trim()) {
+        setError('Ingresa la cédula o RUC del cliente.');
+        return;
+      }
+    }
 
     setSaving(true);
     try {
-      const invoice = await api.createInvoice({ customerName, items });
+      const invoice = await api.createInvoice({
+        finalConsumer,
+        ...(finalConsumer ? {} : customer),
+        items,
+      });
       setSuccess(`Factura #${invoice.id} emitida por $${invoice.total.toLocaleString()}`);
-      setCustomerName('');
+      setCustomer(emptyCustomer);
       setLines([{ ...emptyLine }]);
       load();
     } catch (err) {
@@ -84,15 +100,63 @@ export function BillingPage() {
           {error && <div className="alert alert--error" role="alert">{error}</div>}
           {success && <div className="alert alert--success" role="status">{success}</div>}
 
-          <label>
-            Cliente
-            <input
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Nombre del cliente"
-              required
-            />
-          </label>
+          <span className="form-panel__subtitle">Tipo de cliente</span>
+          <div className="segmented">
+            <button
+              type="button"
+              className={finalConsumer ? 'active' : ''}
+              onClick={() => setFinalConsumer(true)}
+            >
+              <Users size={15} /> Consumidor final
+            </button>
+            <button
+              type="button"
+              className={!finalConsumer ? 'active' : ''}
+              onClick={() => setFinalConsumer(false)}
+            >
+              <User size={15} /> Con datos
+            </button>
+          </div>
+
+          {!finalConsumer && (
+            <>
+              <label>
+                Nombre o razón social
+                <input
+                  value={customer.customerName}
+                  onChange={(e) => setCustomer({ ...customer, customerName: e.target.value })}
+                  placeholder="Cliente S.A."
+                  required
+                />
+              </label>
+              <label>
+                Cédula / RUC
+                <input
+                  value={customer.customerTaxId}
+                  onChange={(e) => setCustomer({ ...customer, customerTaxId: e.target.value })}
+                  placeholder="1712345678001"
+                  required
+                />
+              </label>
+              <label>
+                Correo (opcional)
+                <input
+                  type="email"
+                  value={customer.customerEmail}
+                  onChange={(e) => setCustomer({ ...customer, customerEmail: e.target.value })}
+                  placeholder="cliente@correo.com"
+                />
+              </label>
+              <label>
+                Dirección (opcional)
+                <input
+                  value={customer.customerAddress}
+                  onChange={(e) => setCustomer({ ...customer, customerAddress: e.target.value })}
+                  placeholder="Av. Amazonas y Colón, Quito"
+                />
+              </label>
+            </>
+          )}
 
           <span className="form-panel__subtitle">Productos</span>
           {lines.map((line, index) => {
@@ -173,7 +237,10 @@ export function BillingPage() {
                     <tr>
                       <td>{invoice.id}</td>
                       <td>{new Date(invoice.createdAt).toLocaleDateString()}</td>
-                      <td>{invoice.customerName}</td>
+                      <td>
+                        {invoice.customerName}
+                        {invoice.finalConsumer && <span className="badge" style={{ marginLeft: 8 }}>CF</span>}
+                      </td>
                       <td>{invoice.items.reduce((s, i) => s + i.quantity, 0)}</td>
                       <td>${invoice.total.toLocaleString()}</td>
                       <td className="actions">
@@ -190,6 +257,14 @@ export function BillingPage() {
                     {expandedId === invoice.id && (
                       <tr className="invoice-detail-row">
                         <td colSpan={6}>
+                          {!invoice.finalConsumer && (
+                            <p className="invoice-customer-data">
+                              <strong>{invoice.customerName}</strong>
+                              {invoice.customerTaxId && <> · {invoice.customerTaxId}</>}
+                              {invoice.customerEmail && <> · {invoice.customerEmail}</>}
+                              {invoice.customerAddress && <> · {invoice.customerAddress}</>}
+                            </p>
+                          )}
                           <table className="invoice-detail">
                             <thead>
                               <tr>
