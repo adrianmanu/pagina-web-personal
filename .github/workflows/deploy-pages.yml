@@ -53,12 +53,25 @@ jobs:
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/metrics-dashboard/
 
+      - name: Instalar dependencias automatización de datos
+        run: npm ci
+        working-directory: projects/automatizacion-datos/frontend
+
+      - name: Build automatización de datos
+        run: npm run build
+        working-directory: projects/automatizacion-datos/frontend
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/automatizacion-datos/
+          VITE_API_URL: ${{ vars.AUTOMATIZACION_API_URL }}
+
       - name: Preparar sitio para GitHub Pages
         run: |
           mkdir -p deploy
           cp -r dist/* deploy/
           mkdir -p deploy/metrics-dashboard
           cp -r projects/metrics-dashboard/dist/* deploy/metrics-dashboard/
+          mkdir -p deploy/apps/automatizacion-datos
+          cp -r projects/automatizacion-datos/frontend/dist/* deploy/apps/automatizacion-datos/
 
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3

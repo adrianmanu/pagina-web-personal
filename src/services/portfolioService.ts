@@ -54,16 +54,17 @@ const PROJECTS: Project[] = [
       'Proyecto de titulación: plataforma institucional para gestión y búsqueda de documentos legales.',
     longDescription:
       'Arquitectura de microservicios con Spring Boot para la gestión documental institucional, con búsqueda avanzada y control de acceso OAuth2.',
-    technologies: ['Spring Boot', 'Java', 'Elasticsearch', 'MongoDB', 'OAuth2', 'Docker'],
+    technologies: ['Angular 17', 'Spring Boot', 'Java', 'Elasticsearch', 'MongoDB', 'OAuth2', 'Docker'],
     category: 'fullstack',
     featured: true,
     liveUrl: 'demos/utic-documental/',
     imageGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     highlights: [
+      'Frontend institucional con Angular 17',
       'Microservicios modulares con Spring Boot',
       'Búsqueda avanzada con Elasticsearch (+70% eficiencia)',
-      'Autenticación OAuth2 para acceso institucional',
-      'Persistencia optimizada de datos no estructurados en MongoDB',
+      'Código en repositorio privado por contrato de confidencialidad',
+      'Producción accesible solo mediante VPN institucional',
     ],
   },
   {
@@ -79,7 +80,6 @@ const PROJECTS: Project[] = [
     category: 'mobile',
     featured: true,
     apkUrl: 'downloads/app-debug.apk',
-    liveUrl: 'demos/gusvivan-mobile/',
     imageGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     highlights: [
       'UI nativa con Kotlin y Jetpack Compose',
@@ -94,20 +94,20 @@ const PROJECTS: Project[] = [
     company: 'Portafolio Personal',
     period: '2026',
     description:
-      'Pipeline ETL en Python que extrae datos de APIs REST, los almacena en PostgreSQL y genera reportes analíticos.',
+      'Plataforma full stack con login, dashboard y CRUD para automatizar extracción de datos y reportes analíticos.',
     longDescription:
-      'Sistema de automatización con arquitectura MVC: extracción masiva, transformación y carga de datos con reportes CSV y JSON.',
-    technologies: ['Python', 'PostgreSQL', 'REST APIs', 'Pandas', 'SQLAlchemy'],
+      'Sistema con FastAPI y React: autenticación JWT, gestión de fuentes de datos, registros de ventas, jobs ETL y exportación de reportes.',
+    technologies: ['React', 'TypeScript', 'FastAPI', 'Python', 'SQLAlchemy', 'JWT'],
     category: 'data',
     featured: true,
     githubPath: 'projects/automatizacion-datos',
-    liveUrl: 'demos/automatizacion-datos/',
+    liveUrl: 'apps/automatizacion-datos/',
     imageGradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
     highlights: [
-      'Extracción automática desde APIs REST externas',
-      'Vistas SQL optimizadas para reportes analíticos',
+      'Login, registro y dashboard con roles de usuario',
+      'CRUD de fuentes de datos, registros y jobs ETL',
+      'Pipeline automático desde APIs REST externas',
       'Exportación de reportes en CSV y JSON',
-      'Arquitectura MVC con capas separadas',
     ],
   },
   {

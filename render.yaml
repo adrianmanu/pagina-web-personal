@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: automatizacion-datos-api
+    runtime: python
+    rootDir: projects/automatizacion-datos/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://adrianmanu.github.io,http://localhost:4173,http://localhost:5175

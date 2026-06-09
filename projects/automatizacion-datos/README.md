@@ -1,44 +1,61 @@
-# Automatización de Datos Empresariales
+# Automatización de Datos Empresariales v2
 
-Pipeline ETL en Python con arquitectura MVC para extracción de datos desde APIs REST, almacenamiento en base de datos y generación de reportes analíticos.
+Plataforma full stack con **login, registro, dashboard y CRUD** para automatizar extracción de datos y generar reportes.
 
-## Arquitectura
+## Stack
 
-```
-src/
-├── models/         # SaleRecord (datos)
-├── repositories/   # Acceso a PostgreSQL/SQLite
-├── services/       # API client, ETL, reportes
-└── controllers/    # CLI controller
-```
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | React 18, TypeScript, React Router |
+| Backend | FastAPI, SQLAlchemy, JWT |
+| Base de datos | SQLite (PostgreSQL compatible) |
 
-## Requisitos
+## Funcionalidades
 
-- Python 3.10+
-- PostgreSQL (opcional, usa SQLite por defecto)
+- Registro e inicio de sesión con JWT
+- Dashboard con KPIs y resumen por cliente
+- CRUD de fuentes de datos (APIs REST)
+- CRUD de registros de ventas
+- Ejecución de jobs ETL desde el panel
+- Exportación de reportes CSV y JSON
 
-## Instalación
+## Ejecución local
+
+### Backend (puerto 8000)
 
 ```bash
-cd projects/automatizacion-datos
+cd backend
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
+python run.py
 ```
 
-## Ejecución
+API docs: http://localhost:8000/docs
+
+### Frontend (puerto 5175)
 
 ```bash
-python main.py
+cd frontend
+npm install
+npm run dev
 ```
 
-Genera reportes en `reports/` en formato CSV y JSON.
+Abre: http://localhost:5175
 
-## Qué demuestra
+## Arquitectura MVC
 
-- Consumo de APIs REST externas
-- Persistencia con SQLAlchemy (PostgreSQL o SQLite)
-- Vistas analíticas agrupadas por cliente
-- Exportación automatizada de reportes
-- Separación MVC / Clean Code
+```
+backend/app/
+├── models/       # Entidades SQLAlchemy
+├── schemas/      # DTOs Pydantic
+├── services/     # Lógica de negocio
+└── routers/      # Controladores HTTP
+
+frontend/src/
+├── models/       # Tipos TypeScript (en api/client)
+├── services/     # Cliente API
+├── controllers/  # Context + hooks
+└── views/        # Páginas y componentes
+```

@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "preview:local": "node scripts/preview-local.mjs"
+    "preview:local": "node scripts/preview-local.mjs",
+    "dev:automatizacion": "node scripts/dev-automatizacion.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.469.0",

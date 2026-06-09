@@ -54,12 +54,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <h3 className="project-card__title">{project.title}</h3>
         <p className="project-card__desc">{project.description}</p>
 
-        {isMobile && (
-          <p className="project-card__mobile-note">
-            App nativa Android — descarga el APK o solicita una demo en vivo.
-          </p>
-        )}
-
         <ul className="project-card__highlights">
           {project.highlights.map((highlight) => (
             <li key={highlight}>{highlight}</li>
