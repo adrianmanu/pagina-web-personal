@@ -12,6 +12,7 @@ Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 
 ## Funcionalidades
 
+
 - Registro e inicio de sesión con JWT
 - Dashboard con KPIs de inventario
 - CRUD de productos (nombre, SKU, stock, precio, categoría)
