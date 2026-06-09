@@ -62,7 +62,7 @@ jobs:
         working-directory: projects/automatizacion-datos/frontend
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/automatizacion-datos/
-          VITE_API_URL: ${{ vars.AUTOMATIZACION_API_URL }}
+          VITE_API_URL: ${{ vars.AUTOMATIZACION_API_URL || secrets.AUTOMATIZACION_API_URL }}
 
       - name: Preparar sitio para GitHub Pages
         run: |

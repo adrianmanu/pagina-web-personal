@@ -16,9 +16,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (!response.ok) {
     const contentType = response.headers.get('content-type') ?? '';
     if (!contentType.includes('application/json')) {
-      if (response.status === 404) {
+      if (response.status === 404 || response.status === 405) {
         throw new Error(
-          'API no disponible. Inicia el backend: cd projects/automatizacion-datos/backend && python run.py',
+          API_URL
+            ? `API no responde correctamente (${response.status}). Verifica que Render esté activo.`
+            : 'API no configurada. Define AUTOMATIZACION_API_URL en GitHub y vuelve a desplegar.',
         );
       }
       throw new Error(`Error de servidor (${response.status})`);
@@ -45,9 +47,11 @@ export const api = {
     });
     if (!response.ok) {
       const contentType = response.headers.get('content-type') ?? '';
-      if (!contentType.includes('application/json') && response.status === 404) {
+      if (!contentType.includes('application/json') && (response.status === 404 || response.status === 405)) {
         throw new Error(
-          'API no disponible. Inicia el backend: cd projects/automatizacion-datos/backend && python run.py',
+          API_URL
+            ? `API no responde correctamente (${response.status}). Verifica que Render esté activo.`
+            : 'API no configurada. Define AUTOMATIZACION_API_URL en GitHub y vuelve a desplegar.',
         );
       }
       throw new Error('Credenciales inválidas');
