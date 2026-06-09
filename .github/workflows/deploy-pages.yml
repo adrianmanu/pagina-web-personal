@@ -64,6 +64,7 @@ jobs:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/automatizacion-datos/
           VITE_API_URL: ${{ vars.AUTOMATIZACION_API_URL || secrets.AUTOMATIZACION_API_URL }}
 
+
       - name: Instalar dependencias inventario
         run: npm ci
         working-directory: projects/inventory-api/frontend
