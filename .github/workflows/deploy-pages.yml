@@ -72,6 +72,20 @@ jobs:
           cp -r projects/metrics-dashboard/dist/* deploy/metrics-dashboard/
           mkdir -p deploy/apps/automatizacion-datos
           cp -r projects/automatizacion-datos/frontend/dist/* deploy/apps/automatizacion-datos/
+          cp public/.nojekyll deploy/.nojekyll
+
+      - name: Verificar build del portafolio
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          if grep -q 'src/main.tsx' deploy/index.html; then
+            echo 'ERROR: index.html sin compilar. Revisa VITE_BASE_PATH y el build.'
+            exit 1
+          fi
+          if ! grep -q "${REPO_NAME}/assets/" deploy/index.html; then
+            echo "ERROR: rutas de assets incorrectas (esperado /${REPO_NAME}/assets/)"
+            cat deploy/index.html
+            exit 1
+          fi
 
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3
