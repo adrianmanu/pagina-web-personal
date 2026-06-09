@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { Check, PackagePlus, X } from 'lucide-react';
 import { api, type Product } from '../api/client';
 
 const emptyForm = { name: '', sku: '', stock: 0, price: 0, category: '' };
@@ -8,6 +9,8 @@ export function ProductsPage() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState('');
+  const [stockId, setStockId] = useState<number | null>(null);
+  const [stockQty, setStockQty] = useState(1);
 
   const load = () => api.getProducts().then(setItems);
   useEffect(() => { load(); }, []);
@@ -44,6 +47,18 @@ export function ProductsPage() {
     if (!confirm('¿Eliminar este producto?')) return;
     await api.deleteProduct(id);
     load();
+  };
+
+  const handleAddStock = async (id: number) => {
+    setError('');
+    try {
+      await api.addStock(id, stockQty);
+      setStockId(null);
+      setStockQty(1);
+      load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo actualizar el stock');
+    }
   };
 
   return (
@@ -86,12 +101,40 @@ export function ProductsPage() {
                   <tr key={item.id}>
                     <td>{item.name}</td>
                     <td>{item.sku}</td>
-                    <td>{item.stock}</td>
+                    <td>
+                      <span className={`badge ${item.stock === 0 ? 'badge--failed' : item.stock < 5 ? 'badge--running' : 'badge--ok'}`}>
+                        {item.stock}
+                      </span>
+                    </td>
                     <td>${item.price.toLocaleString()}</td>
                     <td>{item.category}</td>
                     <td className="actions">
-                      <button type="button" className="btn btn--ghost btn--sm" onClick={() => handleEdit(item)}>Editar</button>
-                      <button type="button" className="btn btn--danger btn--sm" onClick={() => handleDelete(item.id)}>Eliminar</button>
+                      {stockId === item.id ? (
+                        <span className="stock-inline">
+                          <input
+                            type="number"
+                            min={1}
+                            value={stockQty}
+                            onChange={(e) => setStockQty(Math.max(1, Number(e.target.value)))}
+                            aria-label="Cantidad a agregar"
+                            autoFocus
+                          />
+                          <button type="button" className="btn btn--primary btn--sm" onClick={() => handleAddStock(item.id)} aria-label="Confirmar">
+                            <Check size={15} />
+                          </button>
+                          <button type="button" className="btn btn--ghost btn--sm" onClick={() => { setStockId(null); setStockQty(1); }} aria-label="Cancelar">
+                            <X size={15} />
+                          </button>
+                        </span>
+                      ) : (
+                        <>
+                          <button type="button" className="btn btn--secondary btn--sm" onClick={() => { setStockId(item.id); setStockQty(1); }}>
+                            <PackagePlus size={15} /> Stock
+                          </button>
+                          <button type="button" className="btn btn--ghost btn--sm" onClick={() => handleEdit(item)}>Editar</button>
+                          <button type="button" className="btn btn--danger btn--sm" onClick={() => handleDelete(item.id)}>Eliminar</button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}

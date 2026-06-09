@@ -116,9 +116,9 @@ const PROJECTS: Project[] = [
     company: 'Portafolio Personal',
     period: '2026',
     description:
-      'Plataforma full stack con Spring Boot y React para gestión de inventario, productos y stock.',
+      'Plataforma full stack con Spring Boot y React para gestión de inventario, facturación y ventas.',
     longDescription:
-      'Backend con JWT, validación y arquitectura en capas. Frontend React con login, dashboard y CRUD de productos.',
+      'Backend con JWT, validación y arquitectura en capas. Frontend React con login, dashboard, CRUD de productos y módulo de facturación con control de stock.',
     technologies: ['Spring Boot', 'Java', 'React', 'JWT', 'Swagger'],
     category: 'api',
     featured: true,
@@ -127,9 +127,9 @@ const PROJECTS: Project[] = [
     imageGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     highlights: [
       'Login y registro con JWT',
-      'CRUD completo de productos e inventario',
-      'Dashboard con KPIs y resumen por categoría',
-      'Arquitectura Spring Boot + React',
+      'Facturación con descuento automático de stock',
+      'CRUD de productos y reposición rápida de stock',
+      'Dashboard con KPIs de inventario y ventas',
     ],
   },
   {

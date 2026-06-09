@@ -14,9 +14,12 @@ Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 
 
 - Registro e inicio de sesión con JWT
-- Dashboard con KPIs de inventario
+- Dashboard con KPIs de inventario y ventas
 - CRUD de productos (nombre, SKU, stock, precio, categoría)
-- Resumen por categoría
+- **Facturación**: emisión de facturas con descuento automático de stock
+- Validación de stock insuficiente al vender
+- Reposición rápida de stock sin editar el producto
+- Resumen por categoría e historial de facturas con detalle
 - Documentación Swagger
 
 ## Ejecución local

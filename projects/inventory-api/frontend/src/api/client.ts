@@ -56,6 +56,16 @@ export const api = {
     request<Product>(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProduct: (id: number) =>
     request<void>(`/api/products/${id}`, { method: 'DELETE' }),
+  addStock: (id: number, quantity: number) =>
+    request<Product>(`/api/products/${id}/stock`, {
+      method: 'POST',
+      body: JSON.stringify({ quantity }),
+    }),
+
+  getInvoices: () => request<Invoice[]>('/api/invoices'),
+  getSalesSummary: () => request<SalesSummary>('/api/invoices/summary'),
+  createInvoice: (data: InvoiceInput) =>
+    request<Invoice>('/api/invoices', { method: 'POST', body: JSON.stringify(data) }),
 };
 
 export interface User {
@@ -86,4 +96,32 @@ export interface InventorySummary {
   totalStock: number;
   inventoryValue: number;
   byCategory: { category: string; products: number; stock: number; value: number }[];
+}
+
+export interface InvoiceItem {
+  productId: number;
+  productName: string;
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+export interface Invoice {
+  id: number;
+  customerName: string;
+  createdAt: string;
+  total: number;
+  items: InvoiceItem[];
+}
+
+export interface InvoiceInput {
+  customerName: string;
+  items: { productId: number; quantity: number }[];
+}
+
+export interface SalesSummary {
+  totalInvoices: number;
+  itemsSold: number;
+  totalRevenue: number;
 }

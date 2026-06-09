@@ -1,10 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { BarChart3, LogOut, Package } from 'lucide-react';
+import { BarChart3, LogOut, Package, Receipt } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const NAV = [
   { to: '/dashboard', label: 'Dashboard', icon: BarChart3, end: true },
   { to: '/productos', label: 'Productos', icon: Package },
+  { to: '/facturacion', label: 'Facturación', icon: Receipt },
 ];
 
 export function Layout() {

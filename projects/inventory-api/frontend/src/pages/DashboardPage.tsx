@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { api, type InventorySummary } from '../api/client';
+import { api, type InventorySummary, type SalesSummary } from '../api/client';
 
 export function DashboardPage() {
   const [summary, setSummary] = useState<InventorySummary | null>(null);
+  const [sales, setSales] = useState<SalesSummary | null>(null);
 
   useEffect(() => {
     api.getSummary().then(setSummary).catch(console.error);
+    api.getSalesSummary().then(setSales).catch(console.error);
   }, []);
 
   return (
@@ -29,6 +31,18 @@ export function DashboardPage() {
         <article className="kpi-card">
           <span>Valor del inventario</span>
           <strong>${(summary?.inventoryValue ?? 0).toLocaleString()}</strong>
+        </article>
+        <article className="kpi-card">
+          <span>Facturas emitidas</span>
+          <strong>{sales?.totalInvoices ?? 0}</strong>
+        </article>
+        <article className="kpi-card">
+          <span>Unidades vendidas</span>
+          <strong>{sales?.itemsSold ?? 0}</strong>
+        </article>
+        <article className="kpi-card">
+          <span>Ingresos por ventas</span>
+          <strong>${(sales?.totalRevenue ?? 0).toLocaleString()}</strong>
         </article>
       </div>
 

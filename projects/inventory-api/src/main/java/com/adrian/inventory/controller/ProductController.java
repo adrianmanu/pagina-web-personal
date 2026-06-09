@@ -3,6 +3,7 @@ package com.adrian.inventory.controller;
 import com.adrian.inventory.dto.InventorySummary;
 import com.adrian.inventory.dto.ProductRequest;
 import com.adrian.inventory.dto.ProductResponse;
+import com.adrian.inventory.dto.StockAdjustRequest;
 import com.adrian.inventory.security.UserPrincipal;
 import com.adrian.inventory.service.ProductService;
 import jakarta.validation.Valid;
@@ -57,5 +58,13 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
         productService.delete(id, principal.getUser());
+    }
+
+    @PostMapping("/{id}/stock")
+    public ProductResponse addStock(
+            @PathVariable Long id,
+            @Valid @RequestBody StockAdjustRequest request,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        return productService.addStock(id, request.quantity(), principal.getUser());
     }
 }

@@ -62,6 +62,13 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+    public ProductResponse addStock(Long id, int quantity, User user) {
+        Product product = getOwnedProduct(id, user);
+        int current = product.getStock() == null ? 0 : product.getStock();
+        product.setStock(current + quantity);
+        return ProductResponse.from(productRepository.save(product));
+    }
+
     public InventorySummary getSummary(User user) {
         List<Product> products = productRepository.findByUserId(user.getId());
 
