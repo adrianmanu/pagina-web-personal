@@ -1,7 +1,7 @@
+import csv
 import io
 import json
 
-import pandas as pd
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
@@ -41,9 +41,11 @@ def export_csv(db: Session = Depends(get_db), user: User = Depends(get_current_u
         }
         for r in records
     ]
-    df = pd.DataFrame(data)
     buffer = io.StringIO()
-    df.to_csv(buffer, index=False, encoding='utf-8-sig')
+    if data:
+        writer = csv.DictWriter(buffer, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)
     buffer.seek(0)
     return StreamingResponse(
         iter([buffer.getvalue()]),
