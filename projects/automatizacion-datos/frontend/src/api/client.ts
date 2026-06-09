@@ -1,44 +1,7 @@
-export const API_URL = import.meta.env.VITE_API_URL ?? '';
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 function getToken(): string | null {
   return localStorage.getItem('token');
-}
-
-export function buildApiUrl(path: string): string {
-  return `${API_URL}${path}`;
-}
-
-export async function downloadReport(path: string, filename: string): Promise<void> {
-  const token = getToken();
-  const response = await fetch(buildApiUrl(path), {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-
-  if (!response.ok) {
-    const contentType = response.headers.get('content-type') ?? '';
-    if (contentType.includes('application/json')) {
-      const error = await response.json().catch(() => ({ detail: 'Error al exportar' }));
-      throw new Error(typeof error.detail === 'string' ? error.detail : 'Error al exportar');
-    }
-    throw new Error(
-      response.status === 404 || response.status === 405
-        ? 'No se pudo exportar. Verifica que la API de Render esté configurada.'
-        : `Error al exportar (${response.status})`,
-    );
-  }
-
-  const contentType = response.headers.get('content-type') ?? '';
-  if (contentType.includes('text/html')) {
-    throw new Error('La exportación devolvió HTML en lugar de datos. Revisa AUTOMATIZACION_API_URL.');
-  }
-
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {

@@ -1,5 +1,19 @@
 import { useEffect, useState } from 'react';
-import { api, downloadReport, type CustomerSummary } from '../api/client';
+import { api, type CustomerSummary } from '../api/client';
+
+async function downloadReport(path: string, filename: string) {
+  const token = localStorage.getItem('token');
+  const response = await fetch(path, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
 
 export function DashboardPage() {
   const [summary, setSummary] = useState<{
@@ -7,20 +21,10 @@ export function DashboardPage() {
     total_revenue: number;
     by_customer: CustomerSummary[];
   } | null>(null);
-  const [exportError, setExportError] = useState('');
 
   useEffect(() => {
     api.getSummary().then(setSummary).catch(console.error);
   }, []);
-
-  const handleExport = async (path: string, filename: string) => {
-    setExportError('');
-    try {
-      await downloadReport(path, filename);
-    } catch (err) {
-      setExportError(err instanceof Error ? err.message : 'No se pudo exportar el reporte');
-    }
-  };
 
   return (
     <div>
@@ -30,20 +34,14 @@ export function DashboardPage() {
           <h1>Dashboard</h1>
         </div>
         <div className="header-actions">
-          <button type="button" className="btn btn--secondary" onClick={() => handleExport('/api/reports/export/csv', 'ventas.csv')}>
+          <button type="button" className="btn btn--secondary" onClick={() => downloadReport('/api/reports/export/csv', 'ventas.csv')}>
             Exportar CSV
           </button>
-          <button type="button" className="btn btn--secondary" onClick={() => handleExport('/api/reports/export/json', 'reporte.json')}>
+          <button type="button" className="btn btn--secondary" onClick={() => downloadReport('/api/reports/export/json', 'reporte.json')}>
             Exportar JSON
           </button>
         </div>
       </header>
-
-      {exportError && (
-        <div className="alert alert--error" role="alert" style={{ marginBottom: 20 }}>
-          {exportError}
-        </div>
-      )}
 
       <div className="kpi-grid">
         <article className="kpi-card">
