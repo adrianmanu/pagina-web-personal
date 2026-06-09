@@ -1,7 +1,38 @@
-const API_URL = import.meta.env.VITE_API_URL ?? '';
+export const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 function getToken(): string | null {
   return localStorage.getItem('token');
+}
+
+function apiPath(path: string): string {
+  return `${API_URL}${path}`;
+}
+
+export async function downloadReport(path: string, filename: string): Promise<void> {
+  const token = getToken();
+  const response = await fetch(apiPath(path), {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+
+  if (!response.ok) {
+    const contentType = response.headers.get('content-type') ?? '';
+    if (contentType.includes('text/html')) {
+      throw new Error(
+        API_URL
+          ? 'No se pudo exportar el reporte. Verifica que la API en Render esté activa.'
+          : 'API no configurada. Define AUTOMATIZACION_API_URL en GitHub y vuelve a desplegar.',
+      );
+    }
+    throw new Error(`Error al exportar (${response.status})`);
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -12,7 +43,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetch(`${API_URL}${path}`, { ...options, headers });
+  const response = await fetch(apiPath(path), { ...options, headers });
   if (!response.ok) {
     const contentType = response.headers.get('content-type') ?? '';
     if (!contentType.includes('application/json')) {
@@ -40,7 +71,7 @@ export const api = {
 
   login: async (email: string, password: string) => {
     const body = new URLSearchParams({ username: email, password });
-    const response = await fetch(`${API_URL}/api/auth/login`, {
+    const response = await fetch(apiPath('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body,
