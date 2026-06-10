@@ -44,6 +44,9 @@ mkdirSync(autoTarget, { recursive: true });
 cpSync(resolve(autoData, 'dist'), autoTarget, { recursive: true });
 
 console.log('📦 Compilando inventario...');
+// El proxy local /api apunta al backend FastAPI, así que el inventario
+// usa su API directamente (Render por defecto, o local con INVENTORY_API_URL=http://localhost:8080)
+const inventoryApi = process.env.INVENTORY_API_URL ?? 'https://inventory-api-ous5.onrender.com';
 const inventory = resolve(root, 'projects/inventory-api/frontend');
 if (!existsSync(resolve(inventory, 'node_modules'))) {
   execSync('npm install', { cwd: inventory, stdio: 'inherit' });
@@ -51,7 +54,7 @@ if (!existsSync(resolve(inventory, 'node_modules'))) {
 execSync('npm run build', {
   cwd: inventory,
   stdio: 'inherit',
-  env: { ...process.env, VITE_BASE_PATH: '/apps/inventory-api/' },
+  env: { ...process.env, VITE_BASE_PATH: '/apps/inventory-api/', VITE_API_URL: inventoryApi },
 });
 const inventoryTarget = resolve(deploy, 'apps/inventory-api');
 rmSync(inventoryTarget, { recursive: true, force: true });
@@ -63,7 +66,7 @@ const backend = await startBackend();
 console.log('\n✅ Build listo. Iniciando servidor con proxy API...\n');
 console.log('   Portafolio:        http://localhost:4173/');
 console.log('   Automatización:    http://localhost:4173/apps/automatizacion-datos/');
-console.log('   Inventario:        http://localhost:4173/apps/inventory-api/');
+console.log(`   Inventario:        http://localhost:4173/apps/inventory-api/  (API: ${inventoryApi})`);
 console.log('   Dashboard:         http://localhost:4173/metrics-dashboard/');
 console.log('   API (proxy):       http://localhost:4173/api/');
 console.log('   Descargar APK:     http://localhost:4173/downloads/app-debug.apk\n');

@@ -1,38 +1,145 @@
-import type { ChartDataPoint, KpiMetric, PeriodFilter } from '../models/Metric';
+import type {
+  DashboardData,
+  KpiMetric,
+  MonthlyRevenuePoint,
+  PeriodFilter,
+  StatusSlice,
+  TopCustomer,
+} from '../models/Metric';
+import type { Order } from '../models/Order';
+import { ORDER_STATUSES } from '../models/Order';
+import { customerService } from './customerService';
+import { orderService } from './orderService';
 
-const ALL_CHART_DATA: ChartDataPoint[] = [
-  { month: 'Ene', sales: 42000, expenses: 28000 },
-  { month: 'Feb', sales: 38500, expenses: 26500 },
-  { month: 'Mar', sales: 51200, expenses: 31000 },
-  { month: 'Abr', sales: 47800, expenses: 29500 },
-  { month: 'May', sales: 55300, expenses: 32000 },
-  { month: 'Jun', sales: 60100, expenses: 33500 },
-  { month: 'Jul', sales: 58900, expenses: 32800 },
-  { month: 'Ago', sales: 62400, expenses: 34200 },
-  { month: 'Sep', sales: 59800, expenses: 33100 },
-  { month: 'Oct', sales: 67200, expenses: 35800 },
-  { month: 'Nov', sales: 71500, expenses: 37200 },
-  { month: 'Dic', sales: 78000, expenses: 39500 },
-];
+const MONTH_LABELS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
-const KPI_DATA: KpiMetric[] = [
-  { id: 'revenue', label: 'Ingresos', value: 78000, unit: 'USD', change: 12.4 },
-  { id: 'orders', label: 'Pedidos', value: 1248, unit: '', change: 8.2 },
-  { id: 'customers', label: 'Clientes activos', value: 342, unit: '', change: 5.1 },
-  { id: 'margin', label: 'Margen neto', value: 49.4, unit: '%', change: 2.3 },
-];
+const PERIOD_MONTHS: Record<PeriodFilter, number> = { '3m': 3, '6m': 6, '12m': 12 };
 
-export class MetricsService {
-  static getKpis(): KpiMetric[] {
-    return KPI_DATA;
-  }
-
-  static getChartData(period: PeriodFilter): ChartDataPoint[] {
-    const monthsMap: Record<PeriodFilter, number> = {
-      '3m': 3,
-      '6m': 6,
-      '12m': 12,
-    };
-    return ALL_CHART_DATA.slice(-monthsMap[period]);
-  }
+function monthKey(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth()}`;
 }
+
+/** Pedidos que cuentan como ingreso (todo lo no cancelado). */
+function isBillable(order: Order): boolean {
+  return order.status !== 'cancelado';
+}
+
+function percentChange(current: number, previous: number): number | null {
+  if (previous === 0) return null;
+  return Math.round(((current - previous) / previous) * 1000) / 10;
+}
+
+function buildKpis(orders: Order[]): KpiMetric[] {
+  const now = new Date();
+  const currentKey = monthKey(now);
+  const previousKey = monthKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+
+  const ofMonth = (key: string) =>
+    orders.filter((order) => monthKey(new Date(order.createdAt)) === key);
+
+  const currentOrders = ofMonth(currentKey);
+  const previousOrders = ofMonth(previousKey);
+
+  const revenue = (list: Order[]) =>
+    list.filter(isBillable).reduce((sum, order) => sum + order.total, 0);
+
+  const currentRevenue = revenue(currentOrders);
+  const previousRevenue = revenue(previousOrders);
+
+  const currentTicket = currentOrders.filter(isBillable).length
+    ? currentRevenue / currentOrders.filter(isBillable).length
+    : 0;
+  const previousTicket = previousOrders.filter(isBillable).length
+    ? previousRevenue / previousOrders.filter(isBillable).length
+    : 0;
+
+  const activeCustomers = customerService.list().filter((c) => c.status === 'activo').length;
+
+  return [
+    {
+      id: 'revenue',
+      label: 'Ingresos del mes',
+      value: Math.round(currentRevenue * 100) / 100,
+      format: 'currency',
+      change: percentChange(currentRevenue, previousRevenue),
+    },
+    {
+      id: 'orders',
+      label: 'Pedidos del mes',
+      value: currentOrders.length,
+      format: 'number',
+      change: percentChange(currentOrders.length, previousOrders.length),
+    },
+    {
+      id: 'ticket',
+      label: 'Ticket promedio',
+      value: Math.round(currentTicket * 100) / 100,
+      format: 'currency',
+      change: percentChange(currentTicket, previousTicket),
+    },
+    {
+      id: 'customers',
+      label: 'Clientes activos',
+      value: activeCustomers,
+      format: 'number',
+      change: null,
+    },
+  ];
+}
+
+function buildRevenueByMonth(orders: Order[], period: PeriodFilter): MonthlyRevenuePoint[] {
+  const months = PERIOD_MONTHS[period];
+  const now = new Date();
+  const points: MonthlyRevenuePoint[] = [];
+
+  for (let offset = months - 1; offset >= 0; offset--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+    const key = monthKey(date);
+    const monthOrders = orders.filter((order) => monthKey(new Date(order.createdAt)) === key);
+    const revenue = monthOrders.filter(isBillable).reduce((sum, order) => sum + order.total, 0);
+
+    points.push({
+      key,
+      month: MONTH_LABELS[date.getMonth()],
+      revenue: Math.round(revenue * 100) / 100,
+      orders: monthOrders.length,
+    });
+  }
+
+  return points;
+}
+
+function buildStatusBreakdown(orders: Order[]): StatusSlice[] {
+  return ORDER_STATUSES.map((status) => ({
+    status,
+    count: orders.filter((order) => order.status === status).length,
+  })).filter((slice) => slice.count > 0);
+}
+
+function buildTopCustomers(): TopCustomer[] {
+  return customerService
+    .listWithStats()
+    .filter((customer) => customer.totalSpent > 0)
+    .sort((a, b) => b.totalSpent - a.totalSpent)
+    .slice(0, 5)
+    .map((customer) => ({
+      id: customer.id,
+      name: customer.name,
+      company: customer.company,
+      orderCount: customer.orderCount,
+      totalSpent: customer.totalSpent,
+    }));
+}
+
+export const metricsService = {
+  getDashboardData(period: PeriodFilter): DashboardData {
+    const orders = orderService.list();
+    return {
+      kpis: buildKpis(orders),
+      revenueByMonth: buildRevenueByMonth(orders, period),
+      statusBreakdown: buildStatusBreakdown(orders),
+      topCustomers: buildTopCustomers(),
+      recentOrders: orders.slice(0, 6),
+    };
+  },
+};

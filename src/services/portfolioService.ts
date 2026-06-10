@@ -134,24 +134,24 @@ const PROJECTS: Project[] = [
   },
   {
     id: 'metrics-dashboard',
-    title: 'Dashboard de Métricas Empresariales',
+    title: 'Metrix — Suite de Gestión Empresarial',
     company: 'Portafolio Personal',
     period: '2026',
     description:
-      'Panel interactivo en React con visualización de KPIs, gráficos y filtros dinámicos.',
+      'Suite de gestión en React: dashboard de métricas, CRUD de pedidos y clientes con datos persistentes.',
     longDescription:
-      'Dashboard empresarial con TypeScript, arquitectura MVC y consumo de APIs REST para métricas en tiempo real.',
-    technologies: ['React', 'TypeScript', 'Chart.js', 'REST APIs', 'CSS3'],
+      'Aplicación SPA con arquitectura MVC estricta (modelos, servicios, controladores y vistas). KPIs y gráficos calculados en tiempo real a partir de los pedidos y clientes registrados, con persistencia local.',
+    technologies: ['React', 'TypeScript', 'React Router', 'SVG Charts', 'CSS3'],
     category: 'frontend',
-    featured: false,
+    featured: true,
     githubPath: 'projects/metrics-dashboard',
     liveUrl: 'metrics-dashboard/',
     imageGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     highlights: [
-      'Visualización de KPIs con gráficos interactivos',
+      'CRUD completo de pedidos y clientes con validaciones',
+      'KPIs y gráficos derivados de los datos reales',
+      'Búsqueda, filtros, paginación y exportación CSV',
       'Arquitectura MVC con hooks como controladores',
-      'Diseño responsive y tema oscuro',
-      'Filtros dinámicos por fecha y categoría',
     ],
   },
   {
