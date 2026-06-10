@@ -79,6 +79,7 @@ const PROJECTS: Project[] = [
     technologies: ['Kotlin', 'Jetpack Compose', 'Firebase', 'Cloudinary', 'Android SDK'],
     category: 'mobile',
     featured: true,
+    liveUrl: 'demos/gusvivan-mobile/',
     apkUrl: 'downloads/app-debug.apk',
     imageGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     highlights: [
@@ -101,7 +102,7 @@ const PROJECTS: Project[] = [
     category: 'data',
     featured: true,
     githubPath: 'projects/automatizacion-datos',
-    liveUrl: 'apps/automatizacion-datos/',
+    liveUrl: 'demos/automatizacion-datos/',
     imageGradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
     highlights: [
       'Login, registro y dashboard con roles de usuario',
@@ -123,7 +124,7 @@ const PROJECTS: Project[] = [
     category: 'api',
     featured: true,
     githubPath: 'projects/inventory-api',
-    liveUrl: 'apps/inventory-api/',
+    liveUrl: 'demos/inventory-api/',
     imageGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     highlights: [
       'Login y registro con JWT',
@@ -146,7 +147,7 @@ const PROJECTS: Project[] = [
     category: 'frontend',
     featured: true,
     githubPath: 'projects/metrics-dashboard',
-    liveUrl: 'metrics-dashboard/',
+    liveUrl: 'demos/metrics-dashboard/',
     imageGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     highlights: [
       'CRUD completo de pedidos y clientes con validaciones',
@@ -168,7 +169,7 @@ const PROJECTS: Project[] = [
     category: 'fullstack',
     featured: true,
     githubPath: 'projects/task-manager-api',
-    liveUrl: 'apps/task-manager/',
+    liveUrl: 'demos/task-manager-api/',
     imageGradient: 'linear-gradient(135deg, #06b6d4 0%, #38bdf8 100%)',
     highlights: [
       'Tablero kanban con estados, prioridades y fechas límite',

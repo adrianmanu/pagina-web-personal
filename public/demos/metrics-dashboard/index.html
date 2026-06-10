@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metrix — Guía y demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">React · TypeScript · MVC · KPIs · Exportación</span>
+    <h1>Metrix — Suite de Gestión Empresarial</h1>
+    <p class="subtitle">
+      Suite SPA con dashboard de métricas, gestión de pedidos y clientes,
+      gráficos en tiempo real y exportación de reportes.
+    </p>
+
+    <div class="card">
+      <h2>¿Qué hace este sistema?</h2>
+      <p>
+        <strong>Metrix</strong> concentra la operación comercial en una sola aplicación: registra
+        pedidos y clientes, calcula KPIs y gráficos a partir de esos datos y permite filtrar,
+        buscar y exportar información. Usa arquitectura MVC estricta y persiste los datos en
+        el navegador para que puedas explorar el flujo completo sin backend.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Qué puedes hacer en la demo</h2>
+      <ul class="feature-list">
+        <li>Visualizar KPIs: ingresos, pedidos, ticket promedio y tendencias</li>
+        <li>Consultar gráficos de ventas y distribución por estado</li>
+        <li>Crear, editar y eliminar pedidos con validaciones</li>
+        <li>Gestionar clientes con búsqueda, filtros y paginación</li>
+        <li>Filtrar pedidos por estado, fecha o cliente</li>
+        <li>Exportar dashboard, pedidos o clientes en PDF o Excel</li>
+      </ul>
+      <div class="tech">
+        <span>React Router</span><span>SVG Charts</span><span>localStorage</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guía rápida de uso</h2>
+      <ol class="steps">
+        <li>
+          <strong>Abre el dashboard</strong>
+          Al entrar verás KPIs y gráficos calculados con datos de ejemplo precargados.
+        </li>
+        <li>
+          <strong>Explora pedidos</strong>
+          Navega a Pedidos, filtra por estado y edita o crea un pedido nuevo.
+        </li>
+        <li>
+          <strong>Administra clientes</strong>
+          En Clientes, busca registros, añade uno nuevo o actualiza datos de contacto.
+        </li>
+        <li>
+          <strong>Observa los KPIs</strong>
+          Vuelve al dashboard: los indicadores se actualizan según tus cambios.
+        </li>
+        <li>
+          <strong>Exporta un reporte</strong>
+          Usa el menú «Exportar» en Dashboard, Pedidos o Clientes.
+        </li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Nota sobre acceso</h2>
+      <div class="note">
+        No requiere login. Los datos de demo se cargan automáticamente y puedes modificarlos libremente;
+        se guardan en <code>localStorage</code> de tu navegador.
+      </div>
+    </div>
+
+    <div class="cta">
+      <h2>¿Listo para probarlo?</h2>
+      <p>Entra directo al dashboard y explora la suite completa de gestión empresarial.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" data-app-url="metrics-dashboard/">Probar demo interactiva</a>
+        <a class="btn btn-secondary" data-github-path="projects/metrics-dashboard" target="_blank" rel="noopener">Ver código</a>
+      </div>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+</body>
+</html>

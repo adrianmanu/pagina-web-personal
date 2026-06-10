@@ -1,14 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const base = window.location.pathname.split('/demos/')[0] + '/';
+
   const backLink = document.querySelector('.back');
-  if (backLink) {
-    const base = window.location.pathname.split('/demos/')[0] + '/';
-    backLink.href = base;
-  }
+  if (backLink) backLink.href = base;
 
   document.querySelectorAll('[data-github-path]').forEach((link) => {
     const path = link.getAttribute('data-github-path');
-    if (path && window.githubTreeUrl) {
-      link.href = window.githubTreeUrl(path);
-    }
+    if (path && window.githubTreeUrl) link.href = window.githubTreeUrl(path);
+  });
+
+  document.querySelectorAll('[data-app-url]').forEach((link) => {
+    link.href = base + link.getAttribute('data-app-url');
+  });
+
+  document.querySelectorAll('[data-apk-url]').forEach((link) => {
+    link.href = base + link.getAttribute('data-apk-url');
+    link.setAttribute('download', '');
   });
 });

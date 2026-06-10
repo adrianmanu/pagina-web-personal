@@ -3,30 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inventory API — Demo</title>
+  <title>StockFlow — Guía y demo</title>
   <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
   <div class="container">
     <a class="back" href="#">← Volver al portafolio</a>
-    <span class="badge">Spring Boot · Java · MySQL</span>
+    <span class="badge">Spring Boot · React · JWT · Inventario · Facturación</span>
     <h1>API de Inventario Empresarial</h1>
-    <p class="subtitle">REST API con arquitectura en capas para gestión de productos e inventario.</p>
+    <p class="subtitle">
+      Plataforma full stack para control de stock, facturación con descuento automático
+      y dashboard con KPIs de inventario y ventas.
+    </p>
 
     <div class="card">
-      <h2>Ejecutar localmente</h2>
-      <pre>cd projects/inventory-api
-mvn spring-boot:run</pre>
-      <p>Swagger UI: <code>http://localhost:8080/swagger-ui.html</code></p>
-      <a class="btn btn-primary" data-github-path="projects/inventory-api" target="_blank" rel="noopener">Ver código en GitHub</a>
+      <h2>¿Qué hace este sistema?</h2>
+      <p>
+        <strong>StockFlow</strong> simula un entorno empresarial de inventario: gestiona productos,
+        emite facturas que descuentan stock en tiempo real y presenta indicadores clave en un
+        dashboard. La demo interactiva funciona en el navegador; el backend Spring Boot completo
+        está disponible en el repositorio para despliegue local.
+      </p>
     </div>
 
     <div class="card">
-      <h2>Endpoints principales</h2>
-      <pre>GET    /api/products
-POST   /api/products
-PUT    /api/products/{id}
-DELETE /api/products/{id}</pre>
+      <h2>Qué puedes hacer en la demo</h2>
+      <ul class="feature-list">
+        <li>Iniciar sesión con cuenta demo o registrarte</li>
+        <li>Ver KPIs de inventario, stock bajo y ventas recientes</li>
+        <li>Crear, editar y eliminar productos con control de stock</li>
+        <li>Reponer stock rápidamente desde la lista de productos</li>
+        <li>Generar facturas con múltiples ítems y descuento automático de stock</li>
+        <li>Exportar inventario, facturas y resumen del dashboard en PDF o Excel</li>
+      </ul>
+      <div class="tech">
+        <span>React</span><span>JWT</span><span>Facturación</span><span>localStorage</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guía rápida de uso</h2>
+      <ol class="steps">
+        <li>
+          <strong>Accede al sistema</strong>
+          Usa «Entrar con demo» o las credenciales de abajo.
+        </li>
+        <li>
+          <strong>Explora el dashboard</strong>
+          Revisa productos activos, stock crítico y ventas del periodo.
+        </li>
+        <li>
+          <strong>Gestiona productos</strong>
+          Añade productos, ajusta precios y repone unidades cuando el stock sea bajo.
+        </li>
+        <li>
+          <strong>Emite una factura</strong>
+          Selecciona productos, confirma la venta y verifica que el stock se descuenta.
+        </li>
+        <li>
+          <strong>Exporta reportes</strong>
+          Desde Dashboard, Productos o Facturación, usa el menú «Exportar».
+        </li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Credenciales de demo</h2>
+      <div class="note">
+        Correo: <code>demo@stockflow.dev</code> · Contraseña: <code>demo1234</code><br />
+        Los datos persisten en tu navegador durante la sesión de prueba.
+      </div>
+    </div>
+
+    <div class="cta">
+      <h2>¿Listo para probarlo?</h2>
+      <p>Explora el flujo completo de inventario y facturación sin instalar nada.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" data-app-url="apps/inventory-api/">Probar demo interactiva</a>
+        <a class="btn btn-secondary" data-github-path="projects/inventory-api" target="_blank" rel="noopener">Ver código</a>
+      </div>
     </div>
   </div>
   <script src="../config.js"></script>

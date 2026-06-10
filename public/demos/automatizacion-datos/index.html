@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataFlow — Guía y demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">React · TypeScript · FastAPI · JWT · ETL</span>
+    <h1>Automatización de Datos Empresariales</h1>
+    <p class="subtitle">
+      Plataforma full stack para automatizar la extracción de datos desde APIs externas,
+      ejecutar jobs ETL y generar reportes analíticos desde un dashboard unificado.
+    </p>
+
+    <div class="card">
+      <h2>¿Qué hace este sistema?</h2>
+      <p>
+        <strong>DataFlow</strong> centraliza fuentes de datos, registros de ventas y procesos ETL
+        en una sola interfaz. Permite registrar usuarios, configurar orígenes de información,
+        lanzar jobs de transformación y visualizar resultados con exportación a PDF y Excel —
+        todo en una demo interactiva con datos de ejemplo en el navegador.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Qué puedes hacer en la demo</h2>
+      <ul class="feature-list">
+        <li>Registrarte o iniciar sesión con cuenta demo precargada</li>
+        <li>Explorar el dashboard con métricas de ventas y actividad ETL</li>
+        <li>Gestionar fuentes de datos (CRUD completo)</li>
+        <li>Consultar registros de ventas importados</li>
+        <li>Ejecutar y monitorear jobs ETL simulados</li>
+        <li>Exportar reportes del dashboard en PDF o Excel</li>
+      </ul>
+      <div class="tech">
+        <span>React</span><span>TypeScript</span><span>JWT</span><span>localStorage</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guía rápida de uso</h2>
+      <ol class="steps">
+        <li>
+          <strong>Inicia sesión</strong>
+          Usa el botón «Entrar con demo» o las credenciales indicadas abajo.
+        </li>
+        <li>
+          <strong>Revisa el dashboard</strong>
+          Observa KPIs de ventas, jobs recientes y actividad del pipeline.
+        </li>
+        <li>
+          <strong>Administra fuentes de datos</strong>
+          Crea, edita o elimina fuentes que alimentan los procesos ETL.
+        </li>
+        <li>
+          <strong>Ejecuta un job ETL</strong>
+          Lanza un job desde la sección correspondiente y revisa su estado.
+        </li>
+        <li>
+          <strong>Exporta un reporte</strong>
+          Desde el dashboard, abre el menú «Exportar» y elige PDF o Excel.
+        </li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Credenciales de demo</h2>
+      <div class="note">
+        Correo: <code>demo@dataflow.dev</code> · Contraseña: <code>demo1234</code><br />
+        También puedes registrarte con cualquier correo; los datos se guardan solo en tu navegador.
+      </div>
+    </div>
+
+    <div class="cta">
+      <h2>¿Listo para probarlo?</h2>
+      <p>La demo corre completamente en el navegador con datos de ejemplo. No requiere servidor externo.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" data-app-url="apps/automatizacion-datos/">Probar demo interactiva</a>
+        <a class="btn btn-secondary" data-github-path="projects/automatizacion-datos" target="_blank" rel="noopener">Ver código</a>
+      </div>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+</body>
+</html>

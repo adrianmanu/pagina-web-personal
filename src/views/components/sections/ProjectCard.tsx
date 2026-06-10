@@ -14,8 +14,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const githubUrl = project.githubPath
     ? resolveGithubTreeUrl(project.githubPath)
     : project.githubUrl;
-  const apkUrl = project.apkUrl ? resolvePublicUrl(project.apkUrl) : undefined;
   const liveUrl = project.liveUrl ? resolvePublicUrl(project.liveUrl) : undefined;
+  const apkUrl =
+    project.apkUrl && !(isMobile && liveUrl)
+      ? resolvePublicUrl(project.apkUrl)
+      : undefined;
 
   return (
     <article className="project-card">
@@ -103,7 +106,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               rel="noopener noreferrer"
               className="project-card__link project-card__link--live"
             >
-              <ExternalLink size={16} /> Ver aplicación
+              <ExternalLink size={16} /> Ver proyecto
             </a>
           )}
         </div>
