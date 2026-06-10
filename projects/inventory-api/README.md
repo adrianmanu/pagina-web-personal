@@ -2,6 +2,8 @@
 
 Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 
+> **Demo en línea:** la versión publicada en GitHub Pages funciona en *modo demo* (datos de ejemplo guardados en el navegador, sin servidor). Este repositorio contiene la API REST completa en Spring Boot, que puede ejecutarse localmente siguiendo los pasos de abajo.
+
 ## Stack
 
 | Capa | Tecnología |

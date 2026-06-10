@@ -96,7 +96,7 @@ const PROJECTS: Project[] = [
     description:
       'Plataforma full stack con login, dashboard y CRUD para automatizar extracción de datos y reportes analíticos.',
     longDescription:
-      'Sistema con FastAPI y React: autenticación JWT, gestión de fuentes de datos, registros de ventas, jobs ETL y exportación de reportes.',
+      'Sistema con FastAPI y React: autenticación JWT, gestión de fuentes de datos, registros de ventas, jobs ETL y exportación de reportes. Demo interactiva en el navegador con datos de ejemplo; el backend FastAPI completo está en el repositorio.',
     technologies: ['React', 'TypeScript', 'FastAPI', 'Python', 'SQLAlchemy', 'JWT'],
     category: 'data',
     featured: true,
@@ -118,7 +118,7 @@ const PROJECTS: Project[] = [
     description:
       'Plataforma full stack con Spring Boot y React para gestión de inventario, facturación y ventas.',
     longDescription:
-      'Backend con JWT, validación y arquitectura en capas. Frontend React con login, dashboard, CRUD de productos y módulo de facturación con control de stock.',
+      'Backend con JWT, validación y arquitectura en capas. Frontend React con login, dashboard, CRUD de productos y módulo de facturación con control de stock. Demo interactiva en el navegador con datos de ejemplo; el backend Spring Boot completo está en el repositorio.',
     technologies: ['Spring Boot', 'Java', 'React', 'JWT', 'Swagger'],
     category: 'api',
     featured: true,
@@ -156,24 +156,24 @@ const PROJECTS: Project[] = [
   },
   {
     id: 'task-manager-api',
-    title: 'Task Manager API',
+    title: 'TaskFlow — Gestión de Tareas',
     company: 'Portafolio Personal',
     period: '2026',
     description:
-      'API REST en Node.js y TypeScript para gestión de tareas con autenticación JWT.',
+      'Aplicación full-stack de gestión de tareas con tablero kanban, prioridades, fechas límite y métricas de productividad.',
     longDescription:
-      'Backend modular con Express, validación de datos, middleware de autenticación y persistencia en MongoDB.',
-    technologies: ['Node.js', 'TypeScript', 'Express', 'MongoDB', 'JWT'],
-    category: 'backend',
-    featured: false,
+      'Backend en Node.js + Express + TypeScript con autenticación JWT, patrón repositorio y manejo centralizado de errores. Frontend en React con tablero kanban, dashboard de estadísticas y filtros por prioridad. Demo interactiva en el navegador con datos de ejemplo; el backend Node completo está en el repositorio.',
+    technologies: ['Node.js', 'TypeScript', 'Express', 'JWT', 'React'],
+    category: 'fullstack',
+    featured: true,
     githubPath: 'projects/task-manager-api',
-    liveUrl: 'demos/task-manager-api/',
-    imageGradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    liveUrl: 'apps/task-manager/',
+    imageGradient: 'linear-gradient(135deg, #06b6d4 0%, #38bdf8 100%)',
     highlights: [
-      'API REST documentada con endpoints CRUD',
-      'Autenticación JWT con middleware',
-      'Validación de datos y manejo de errores centralizado',
-      'Arquitectura MVC en capas',
+      'Tablero kanban con estados, prioridades y fechas límite',
+      'Dashboard con KPIs: vencidas, % completado y próximos vencimientos',
+      'Autenticación JWT con registro e inicio de sesión',
+      'Patrón repositorio: PostgreSQL o memoria según entorno',
     ],
   },
   {

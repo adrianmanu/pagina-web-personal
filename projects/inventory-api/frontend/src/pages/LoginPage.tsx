@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Loader2, Mail } from 'lucide-react';
+import { ArrowRight, Loader2, Mail, Sparkles } from 'lucide-react';
+import { DEMO_EMAIL, DEMO_PASSWORD } from '../api/client';
 import { AuthLayout } from '../components/auth/AuthLayout';
 import { FormField } from '../components/ui/FormField';
 import { PasswordField } from '../components/ui/PasswordField';
@@ -19,6 +20,19 @@ export function LoginPage() {
     const saved = localStorage.getItem('remembered_email_inventory');
     if (saved) setEmail(saved);
   }, []);
+
+  const handleDemo = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await login(DEMO_EMAIL, DEMO_PASSWORD);
+      navigate('/dashboard');
+    } catch {
+      setError('No se pudo iniciar la sesión demo.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -84,6 +98,17 @@ export function LoginPage() {
           ) : (
             <>Iniciar sesión <ArrowRight size={18} /></>
           )}
+        </button>
+
+        <div className="auth-divider"><span>o</span></div>
+
+        <button
+          type="button"
+          className="btn btn--demo btn--full"
+          onClick={handleDemo}
+          disabled={loading}
+        >
+          <Sparkles size={18} /> Explorar con cuenta demo
         </button>
       </form>
     </AuthLayout>

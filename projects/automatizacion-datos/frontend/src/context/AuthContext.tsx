@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { api } from '../api/client';
+import { api, clearToken, getToken } from '../api/client';
 
 interface User {
   id: number;
@@ -22,20 +22,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!getToken()) {
       setLoading(false);
       return;
     }
     api.me()
       .then(setUser)
-      .catch(() => localStorage.removeItem('token'))
+      .catch(() => clearToken())
       .finally(() => setLoading(false));
   }, []);
 
   const login = async (email: string, password: string) => {
     const data = await api.login(email, password);
-    localStorage.setItem('token', data.access_token);
     setUser(data.user);
   };
 
@@ -45,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    clearToken();
     setUser(null);
   };
 

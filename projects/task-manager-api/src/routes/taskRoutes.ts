@@ -1,14 +1,16 @@
 import { Router } from 'express';
-import { TaskController } from '../controllers/taskController';
-import { TaskService } from '../services/taskService';
+import type { TaskController } from '../controllers/taskController';
+import { requireAuth } from '../middleware/auth';
+import { asyncHandler } from '../middleware/errorHandler';
 
-const router = Router();
-const controller = new TaskController(new TaskService());
-
-router.get('/', controller.getAll);
-router.get('/:id', controller.getById);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.remove);
-
-export default router;
+export function createTaskRoutes(controller: TaskController): Router {
+  const router = Router();
+  router.use(requireAuth);
+  router.get('/', asyncHandler(controller.list));
+  router.get('/stats', asyncHandler(controller.stats));
+  router.post('/', asyncHandler(controller.create));
+  router.put('/:id', asyncHandler(controller.update));
+  router.patch('/:id/status', asyncHandler(controller.changeStatus));
+  router.delete('/:id', asyncHandler(controller.remove));
+  return router;
+}

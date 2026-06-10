@@ -2,6 +2,8 @@
 
 Plataforma full stack con **login, registro, dashboard y CRUD** para automatizar extracción de datos y generar reportes.
 
+> **Demo en línea:** la versión publicada en GitHub Pages funciona en *modo demo* (datos de ejemplo guardados en el navegador, sin servidor). Este repositorio contiene la API REST completa en FastAPI, que puede ejecutarse localmente siguiendo los pasos de abajo.
+
 ## Stack
 
 | Capa | Tecnología |

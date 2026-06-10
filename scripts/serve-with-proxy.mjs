@@ -1,8 +1,8 @@
 /**
- * Servidor estático con proxy /api → backend FastAPI.
- * Necesario porque `serve` no reenvía peticiones API y devuelve 404.
+ * Servidor estático local con fallback SPA por aplicación.
+ * Todas las demos funcionan en el navegador (sin backend).
  */
-import { createServer, request as httpRequest } from 'http';
+import { createServer } from 'http';
 import { readFile, stat } from 'fs/promises';
 import { join, extname } from 'path';
 import { fileURLToPath } from 'url';
@@ -20,37 +20,14 @@ const MIME = {
   '.apk': 'application/vnd.android.package-archive',
 };
 
-export function startStaticWithProxy({
-  staticRoot,
-  port = 4173,
-  apiTarget = 'http://127.0.0.1:8000',
-}) {
-  const apiUrl = new URL(apiTarget);
+const SPA_ROOTS = [
+  '/apps/automatizacion-datos',
+  '/apps/inventory-api',
+  '/apps/task-manager',
+  '/metrics-dashboard',
+];
 
-  function proxy(req, res) {
-    const headers = { ...req.headers, host: apiUrl.host };
-    const proxyReq = httpRequest(
-      {
-        hostname: apiUrl.hostname,
-        port: apiUrl.port || (apiUrl.protocol === 'https:' ? 443 : 80),
-        path: req.url,
-        method: req.method,
-        headers,
-      },
-      (proxyRes) => {
-        res.writeHead(proxyRes.statusCode ?? 502, proxyRes.headers);
-        proxyRes.pipe(res);
-      },
-    );
-    proxyReq.on('error', () => {
-      res.writeHead(502, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({
-        detail: 'Backend no disponible. Ejecuta: cd projects/automatizacion-datos/backend && python run.py',
-      }));
-    });
-    req.pipe(proxyReq);
-  }
-
+export function startStaticWithProxy({ staticRoot, port = 4173 }) {
   async function serveStatic(req, res) {
     let urlPath = decodeURIComponent(new URL(req.url ?? '/', `http://localhost:${port}`).pathname);
     if (urlPath.endsWith('/')) urlPath += 'index.html';
@@ -70,37 +47,21 @@ export function startStaticWithProxy({
       // SPA fallback
     }
 
-    const spaFallback = urlPath.startsWith('/apps/automatizacion-datos')
-      ? '/apps/automatizacion-datos/index.html'
-      : urlPath.startsWith('/apps/inventory-api')
-        ? '/apps/inventory-api/index.html'
-        : urlPath.startsWith('/metrics-dashboard')
-          ? '/metrics-dashboard/index.html'
-          : '/index.html';
+    const appRoot = SPA_ROOTS.find((root) => urlPath.startsWith(root));
+    const spaFallback = appRoot ? `${appRoot}/index.html` : '/index.html';
 
-    for (const fallback of [spaFallback]) {
-      try {
-        const data = await readFile(join(staticRoot, fallback));
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end(data);
-        return;
-      } catch {
-        // try next
-      }
+    try {
+      const data = await readFile(join(staticRoot, spaFallback));
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(data);
+      return;
+    } catch {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('Not found');
     }
-
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not found');
   }
 
-  const server = createServer((req, res) => {
-    const path = req.url?.split('?')[0] ?? '/';
-    if (path.startsWith('/api') || path === '/health') {
-      proxy(req, res);
-      return;
-    }
-    serveStatic(req, res);
-  });
+  const server = createServer(serveStatic);
 
   return new Promise((resolve) => {
     server.listen(port, () => resolve(server));
@@ -111,5 +72,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = process.argv[2] ?? 'dist';
   const port = Number(process.argv[3] ?? 4173);
   await startStaticWithProxy({ staticRoot: root, port });
-  console.log(`Servidor con proxy API en http://localhost:${port}`);
+  console.log(`Servidor estático en http://localhost:${port}`);
 }

@@ -62,7 +62,6 @@ jobs:
         working-directory: projects/automatizacion-datos/frontend
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/automatizacion-datos/
-          VITE_API_URL: ${{ vars.AUTOMATIZACION_API_URL || secrets.AUTOMATIZACION_API_URL }}
 
 
       - name: Instalar dependencias inventario
@@ -74,7 +73,16 @@ jobs:
         working-directory: projects/inventory-api/frontend
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/inventory-api/
-          VITE_API_URL: ${{ vars.INVENTORY_API_URL || secrets.INVENTORY_API_URL }}
+
+      - name: Instalar dependencias task manager
+        run: npm ci
+        working-directory: projects/task-manager-api/frontend
+
+      - name: Build task manager frontend
+        run: npm run build
+        working-directory: projects/task-manager-api/frontend
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/task-manager/
 
       - name: Preparar sitio para GitHub Pages
         run: |
@@ -86,6 +94,8 @@ jobs:
           cp -r projects/automatizacion-datos/frontend/dist/* deploy/apps/automatizacion-datos/
           mkdir -p deploy/apps/inventory-api
           cp -r projects/inventory-api/frontend/dist/* deploy/apps/inventory-api/
+          mkdir -p deploy/apps/task-manager
+          cp -r projects/task-manager-api/frontend/dist/* deploy/apps/task-manager/
 
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3

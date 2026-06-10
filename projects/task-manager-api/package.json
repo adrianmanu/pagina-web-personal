@@ -1,7 +1,7 @@
 {
   "name": "task-manager-api",
-  "version": "1.0.0",
-  "description": "API REST para gestión de tareas con Node.js y TypeScript",
+  "version": "2.0.0",
+  "description": "API REST para gestión de tareas con autenticación JWT, Node.js y TypeScript",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
@@ -9,14 +9,19 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "uuid": "^11.0.5"
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.21.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.10.5",
+    "@types/pg": "^8.20.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }
