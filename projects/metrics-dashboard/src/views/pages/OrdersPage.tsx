@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import { Download, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../../utils/exportReports';
 import { useOrdersController, type StatusFilter } from '../../controllers/useOrdersController';
 import type { Order, OrderItem, OrderStatus } from '../../models/Order';
 import { ORDER_STATUSES, ORDER_STATUS_LABELS, calcOrderTotal } from '../../models/Order';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { ExportMenu } from '../components/ExportMenu';
 import { Modal } from '../components/Modal';
 import { Pagination } from '../components/Pagination';
 import { StatusBadge } from '../components/StatusBadge';
@@ -18,6 +20,8 @@ interface OrderFormState {
 }
 
 const EMPTY_FORM: OrderFormState = { customerId: '', status: 'pendiente', items: [{ ...EMPTY_ITEM }] };
+
+const METRIX_THEME = { accentRgb: [99, 102, 241] as [number, number, number] };
 
 export function OrdersPage() {
   const controller = useOrdersController();
@@ -94,25 +98,26 @@ export function OrdersPage() {
     setDeleting(null);
   };
 
-  const exportCsv = () => {
-    const rows = [
-      ['Número', 'Fecha', 'Cliente', 'Estado', 'Ítems', 'Total'],
-      ...controller.orders.map((order) => [
-        order.number,
-        new Date(order.createdAt).toLocaleDateString(),
-        controller.customersById.get(order.customerId) ?? '',
-        ORDER_STATUS_LABELS[order.status],
-        String(order.items.reduce((sum, item) => sum + item.quantity, 0)),
-        String(order.total),
-      ]),
+  const exportOrders = (format: 'pdf' | 'excel') => {
+    const rows = controller.orders.map((order) => ({
+      ...order,
+      customerName: controller.customersById.get(order.customerId) ?? '—',
+    }));
+    const columns: ExportColumn<(typeof rows)[number]>[] = [
+      { header: 'Número', value: (order) => order.number },
+      { header: 'Fecha', value: (order) => new Date(order.createdAt).toLocaleDateString() },
+      { header: 'Cliente', value: (order) => order.customerName },
+      { header: 'Estado', value: (order) => ORDER_STATUS_LABELS[order.status] },
+      { header: 'Ítems', value: (order) => order.items.reduce((sum, item) => sum + item.quantity, 0) },
+      { header: 'Total', value: (order) => order.total },
     ];
-    const csv = rows.map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(',')).join('\n');
-    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'pedidos.csv';
-    link.click();
-    URL.revokeObjectURL(link.href);
+    const meta = {
+      title: 'Reporte de pedidos — Metrix',
+      subtitle: `${rows.length} pedidos registrados`,
+      filenameBase: `pedidos-metrix-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, columns, rows, METRIX_THEME);
+    else downloadExcel(meta, columns, rows, 'Pedidos');
   };
 
   const formTotal = calcOrderTotal(form.items);
@@ -125,9 +130,7 @@ export function OrdersPage() {
           <h1>Pedidos</h1>
         </div>
         <div className="page-header__actions">
-          <button type="button" className="btn btn--ghost" onClick={exportCsv}>
-            <Download size={15} /> Exportar CSV
-          </button>
+          <ExportMenu onExport={exportOrders} disabled={!controller.orders.length} />
           <button type="button" className="btn btn--primary" onClick={openCreate}>
             <Plus size={15} /> Nuevo pedido
           </button>

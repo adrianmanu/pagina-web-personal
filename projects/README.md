@@ -6,6 +6,5 @@
 | API de Inventario | Spring Boot, Java, MySQL | `inventory-api/` |
 | Dashboard de Métricas | React, TypeScript | `metrics-dashboard/` |
 | Task Manager API | Node.js, TypeScript, Express | `task-manager-api/` |
-| Generador de Reportes | Python, FastAPI, PDF/Excel | `report-generator/` |
 
-Cada proyecto sigue arquitectura MVC y principios de Clean Code.
+Cada proyecto incluye exportación de reportes en PDF y Excel desde su propia interfaz.

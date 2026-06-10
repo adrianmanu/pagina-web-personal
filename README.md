@@ -13,8 +13,7 @@ Monorepo con portafolio web y proyectos organizados por carpetas. Despliegue aut
 │   ├── automatizacion-datos/
 │   ├── inventory-api/
 │   ├── metrics-dashboard/
-│   ├── task-manager-api/
-│   └── report-generator/
+│   └── task-manager-api/
 └── .github/workflows/      # Deploy automático
 ```
 

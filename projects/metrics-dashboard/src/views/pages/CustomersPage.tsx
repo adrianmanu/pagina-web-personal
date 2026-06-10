@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../../utils/exportReports';
 import { useCustomersController } from '../../controllers/useCustomersController';
 import type { Customer, CustomerInput, CustomerWithStats } from '../../models/Customer';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { ExportMenu } from '../components/ExportMenu';
 import { Modal } from '../components/Modal';
 import { useToast } from '../components/Toast';
 
@@ -14,6 +16,18 @@ const EMPTY_FORM: CustomerInput = {
   city: '',
   status: 'activo',
 };
+
+const METRIX_THEME = { accentRgb: [99, 102, 241] as [number, number, number] };
+
+const CUSTOMER_COLUMNS: ExportColumn<CustomerWithStats>[] = [
+  { header: 'Nombre', value: (c) => c.name },
+  { header: 'Correo', value: (c) => c.email },
+  { header: 'Empresa', value: (c) => c.company },
+  { header: 'Ciudad', value: (c) => c.city },
+  { header: 'Estado', value: (c) => c.status },
+  { header: 'Pedidos', value: (c) => c.orderCount },
+  { header: 'Total gastado', value: (c) => c.totalSpent },
+];
 
 export function CustomersPage() {
   const controller = useCustomersController();
@@ -74,6 +88,20 @@ export function CustomersPage() {
     setDeleting(null);
   };
 
+  const exportCustomers = (format: 'pdf' | 'excel') => {
+    if (!controller.customers.length) {
+      showToast('error', 'No hay clientes para exportar');
+      return;
+    }
+    const meta = {
+      title: 'Reporte de clientes — Metrix',
+      subtitle: `${controller.customers.length} clientes registrados`,
+      filenameBase: `clientes-metrix-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, CUSTOMER_COLUMNS, controller.customers, METRIX_THEME);
+    else downloadExcel(meta, CUSTOMER_COLUMNS, controller.customers, 'Clientes');
+  };
+
   return (
     <div>
       <header className="page-header">
@@ -82,6 +110,7 @@ export function CustomersPage() {
           <h1>Clientes</h1>
         </div>
         <div className="page-header__actions">
+          <ExportMenu onExport={exportCustomers} disabled={!controller.customers.length} />
           <button type="button" className="btn btn--primary" onClick={openCreate}>
             <Plus size={15} /> Nuevo cliente
           </button>

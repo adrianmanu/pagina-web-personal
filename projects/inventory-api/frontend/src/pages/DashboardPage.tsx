@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
+import { ExportMenu } from '../components/ui/ExportMenu';
 import { api, type InventorySummary, type SalesSummary } from '../api/client';
+
+const STOCKFLOW_THEME = { accentRgb: [244, 63, 94] as [number, number, number] };
 
 export function DashboardPage() {
   const [summary, setSummary] = useState<InventorySummary | null>(null);
@@ -10,12 +14,38 @@ export function DashboardPage() {
     api.getSalesSummary().then(setSales).catch(console.error);
   }, []);
 
+  const exportReport = (format: 'pdf' | 'excel') => {
+    type Row = { metric: string; value: string };
+    const rows: Row[] = [
+      { metric: 'Productos registrados', value: String(summary?.totalProducts ?? 0) },
+      { metric: 'Stock total', value: String(summary?.totalStock ?? 0) },
+      { metric: 'Valor del inventario', value: `$${(summary?.inventoryValue ?? 0).toLocaleString()}` },
+      { metric: 'Facturas emitidas', value: String(sales?.totalInvoices ?? 0) },
+      { metric: 'Unidades vendidas', value: String(sales?.itemsSold ?? 0) },
+      { metric: 'Ingresos por ventas', value: `$${(sales?.totalRevenue ?? 0).toLocaleString()}` },
+    ];
+    const columns: ExportColumn<Row>[] = [
+      { header: 'Indicador', value: (row) => row.metric },
+      { header: 'Valor', value: (row) => row.value },
+    ];
+    const meta = {
+      title: 'Resumen de inventario — StockFlow',
+      subtitle: 'KPIs del panel principal',
+      filenameBase: `resumen-inventario-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, columns, rows, STOCKFLOW_THEME);
+    else downloadExcel(meta, columns, rows, 'Resumen');
+  };
+
   return (
     <div>
       <header className="page-header">
         <div>
           <p className="eyebrow">Panel principal</p>
           <h1>Dashboard de inventario</h1>
+        </div>
+        <div className="header-actions">
+          <ExportMenu onExport={exportReport} />
         </div>
       </header>
 

@@ -10,6 +10,8 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
+import { ExportMenu } from '../components/ui/ExportMenu';
 import {
   api,
   PRIORITY_LABELS,
@@ -36,6 +38,19 @@ const EMPTY_FORM: TaskFormState = {
   priority: 'media',
   dueDate: '',
 };
+
+const TASKFLOW_THEME = { accentRgb: [6, 182, 212] as [number, number, number] };
+
+const TASK_COLUMNS: ExportColumn<Task>[] = [
+  { header: 'Título', value: (task) => task.title },
+  { header: 'Estado', value: (task) => STATUS_LABELS[task.status] },
+  { header: 'Prioridad', value: (task) => PRIORITY_LABELS[task.priority] },
+  {
+    header: 'Fecha límite',
+    value: (task) => (task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '—'),
+  },
+  { header: 'Descripción', value: (task) => task.description || '—' },
+];
 
 function toDateInput(value: string | null): string {
   return value ? value.slice(0, 10) : '';
@@ -133,6 +148,20 @@ export function BoardPage() {
     }
   };
 
+  const exportTasks = (format: 'pdf' | 'excel') => {
+    if (!tasks.length) {
+      setError('No hay tareas para exportar.');
+      return;
+    }
+    const meta = {
+      title: 'Reporte de tareas — TaskFlow',
+      subtitle: `${tasks.length} tareas en el tablero`,
+      filenameBase: `tareas-taskflow-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, TASK_COLUMNS, tasks, TASKFLOW_THEME);
+    else downloadExcel(meta, TASK_COLUMNS, tasks, 'Tareas');
+  };
+
   const now = Date.now();
 
   return (
@@ -142,9 +171,12 @@ export function BoardPage() {
           <p className="eyebrow">Organización</p>
           <h1>Tablero de tareas</h1>
         </div>
-        <button type="button" className="btn btn--primary" onClick={() => openCreate('pendiente')}>
-          <Plus size={16} /> Nueva tarea
-        </button>
+        <div className="header-actions">
+          <ExportMenu onExport={exportTasks} disabled={!tasks.length} />
+          <button type="button" className="btn btn--primary" onClick={() => openCreate('pendiente')}>
+            <Plus size={16} /> Nueva tarea
+          </button>
+        </div>
       </header>
 
       {error && <div className="alert alert--error" role="alert">{error}</div>}

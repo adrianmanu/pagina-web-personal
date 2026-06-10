@@ -107,7 +107,7 @@ const PROJECTS: Project[] = [
       'Login, registro y dashboard con roles de usuario',
       'CRUD de fuentes de datos, registros y jobs ETL',
       'Pipeline automático desde APIs REST externas',
-      'Exportación de reportes en CSV y JSON',
+      'Exportación de reportes en PDF y Excel desde el dashboard',
     ],
   },
   {
@@ -130,6 +130,7 @@ const PROJECTS: Project[] = [
       'Facturación con descuento automático de stock',
       'CRUD de productos y reposición rápida de stock',
       'Dashboard con KPIs de inventario y ventas',
+      'Exportación de inventario y facturas en PDF y Excel',
     ],
   },
   {
@@ -150,7 +151,7 @@ const PROJECTS: Project[] = [
     highlights: [
       'CRUD completo de pedidos y clientes con validaciones',
       'KPIs y gráficos derivados de los datos reales',
-      'Búsqueda, filtros, paginación y exportación CSV',
+      'Búsqueda, filtros, paginación y exportación PDF/Excel',
       'Arquitectura MVC con hooks como controladores',
     ],
   },
@@ -173,29 +174,7 @@ const PROJECTS: Project[] = [
       'Tablero kanban con estados, prioridades y fechas límite',
       'Dashboard con KPIs: vencidas, % completado y próximos vencimientos',
       'Autenticación JWT con registro e inicio de sesión',
-      'Patrón repositorio: PostgreSQL o memoria según entorno',
-    ],
-  },
-  {
-    id: 'report-generator',
-    title: 'Generador de Reportes PDF/Excel',
-    company: 'Portafolio Personal',
-    period: '2026',
-    description:
-      'Microservicio en Python con FastAPI para generar reportes empresariales en PDF y Excel.',
-    longDescription:
-      'API que recibe datos estructurados y produce reportes con formateo profesional para auditorías.',
-    technologies: ['Python', 'FastAPI', 'openpyxl', 'ReportLab', 'Docker'],
-    category: 'api',
-    featured: false,
-    githubPath: 'projects/report-generator',
-    liveUrl: 'demos/report-generator/',
-    imageGradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
-    highlights: [
-      'Generación de reportes PDF con ReportLab',
-      'Exportación Excel (.xlsx) con formateo complejo',
-      'API documentada con OpenAPI/Swagger',
-      'Containerizado con Docker',
+      'Exportación de tareas y resumen en PDF y Excel',
     ],
   },
 ];

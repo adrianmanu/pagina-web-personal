@@ -1,5 +1,20 @@
 import { useEffect, useState } from 'react';
-import { api, downloadReport, type CustomerSummary } from '../api/client';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
+import { ExportMenu } from '../components/ui/ExportMenu';
+import { api, type CustomerSummary, type SaleRecord } from '../api/client';
+
+const SALE_COLUMNS: ExportColumn<SaleRecord>[] = [
+  { header: 'ID', value: (row) => row.id },
+  { header: 'Ref. externa', value: (row) => row.external_id },
+  { header: 'Producto', value: (row) => row.product_name },
+  { header: 'Cantidad', value: (row) => row.quantity },
+  { header: 'Precio unit.', value: (row) => row.unit_price },
+  { header: 'Cliente', value: (row) => row.customer },
+  { header: 'Total', value: (row) => row.total },
+  { header: 'Extraído', value: (row) => new Date(row.extracted_at).toLocaleString() },
+];
+
+const DATAFLOW_THEME = { accentRgb: [16, 185, 129] as [number, number, number] };
 
 export function DashboardPage() {
   const [summary, setSummary] = useState<{
@@ -7,18 +22,30 @@ export function DashboardPage() {
     total_revenue: number;
     by_customer: CustomerSummary[];
   } | null>(null);
+  const [records, setRecords] = useState<SaleRecord[]>([]);
   const [exportError, setExportError] = useState('');
 
   useEffect(() => {
     api.getSummary().then(setSummary).catch(console.error);
+    api.getRecords().then(setRecords).catch(console.error);
   }, []);
 
-  const handleExport = async (path: string, filename: string) => {
+  const exportSales = (format: 'pdf' | 'excel') => {
     setExportError('');
+    if (!records.length) {
+      setExportError('No hay registros para exportar. Ejecuta un job ETL primero.');
+      return;
+    }
+    const meta = {
+      title: 'Reporte de ventas — DataFlow',
+      subtitle: `${records.length} registros · $${(summary?.total_revenue ?? 0).toLocaleString()} en ingresos`,
+      filenameBase: `ventas-dataflow-${new Date().toISOString().slice(0, 10)}`,
+    };
     try {
-      await downloadReport(path, filename);
-    } catch (err) {
-      setExportError(err instanceof Error ? err.message : 'No se pudo exportar el reporte');
+      if (format === 'pdf') downloadPdf(meta, SALE_COLUMNS, records, DATAFLOW_THEME);
+      else downloadExcel(meta, SALE_COLUMNS, records, 'Ventas');
+    } catch {
+      setExportError('No se pudo generar el reporte.');
     }
   };
 
@@ -30,20 +57,7 @@ export function DashboardPage() {
           <h1>Dashboard</h1>
         </div>
         <div className="header-actions">
-          <button
-            type="button"
-            className="btn btn--secondary"
-            onClick={() => handleExport('/api/reports/export/csv', 'ventas.csv')}
-          >
-            Exportar CSV
-          </button>
-          <button
-            type="button"
-            className="btn btn--secondary"
-            onClick={() => handleExport('/api/reports/export/json', 'reporte.json')}
-          >
-            Exportar JSON
-          </button>
+          <ExportMenu onExport={exportSales} disabled={!records.length} />
         </div>
       </header>
 

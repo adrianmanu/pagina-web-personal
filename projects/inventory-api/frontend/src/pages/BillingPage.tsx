@@ -1,5 +1,7 @@
 import { FormEvent, Fragment, useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Trash2, User, Users } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
+import { ExportMenu } from '../components/ui/ExportMenu';
 import { api, type Invoice, type Product } from '../api/client';
 
 interface Line {
@@ -9,6 +11,17 @@ interface Line {
 
 const emptyLine: Line = { productId: '', quantity: 1 };
 const emptyCustomer = { customerName: '', customerTaxId: '', customerEmail: '', customerAddress: '' };
+
+const STOCKFLOW_THEME = { accentRgb: [244, 63, 94] as [number, number, number] };
+
+const INVOICE_COLUMNS: ExportColumn<Invoice>[] = [
+  { header: 'Factura', value: (inv) => `#${inv.id}` },
+  { header: 'Cliente', value: (inv) => inv.customerName },
+  { header: 'Tipo', value: (inv) => (inv.finalConsumer ? 'Consumidor final' : 'Con datos') },
+  { header: 'Ítems', value: (inv) => inv.items.length },
+  { header: 'Total', value: (inv) => inv.total },
+  { header: 'Fecha', value: (inv) => new Date(inv.createdAt).toLocaleString() },
+];
 
 export function BillingPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -85,12 +98,29 @@ export function BillingPage() {
     }
   };
 
+  const exportInvoices = (format: 'pdf' | 'excel') => {
+    if (!invoices.length) {
+      setError('No hay facturas para exportar.');
+      return;
+    }
+    const meta = {
+      title: 'Reporte de facturación — StockFlow',
+      subtitle: `${invoices.length} facturas emitidas`,
+      filenameBase: `facturas-stockflow-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, INVOICE_COLUMNS, invoices, STOCKFLOW_THEME);
+    else downloadExcel(meta, INVOICE_COLUMNS, invoices, 'Facturas');
+  };
+
   return (
     <div>
       <header className="page-header">
         <div>
           <p className="eyebrow">Ventas</p>
           <h1>Facturación</h1>
+        </div>
+        <div className="header-actions">
+          <ExportMenu onExport={exportInvoices} disabled={!invoices.length} />
         </div>
       </header>
 

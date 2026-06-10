@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, ArrowRight, CalendarClock } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
+import { ExportMenu } from '../components/ui/ExportMenu';
 import {
   api,
   PRIORITY_LABELS,
@@ -8,6 +10,8 @@ import {
   type Task,
   type TaskStats,
 } from '../api/client';
+
+const TASKFLOW_THEME = { accentRgb: [6, 182, 212] as [number, number, number] };
 
 function formatDate(value: string): string {
   return new Date(value).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
@@ -22,6 +26,30 @@ export function DashboardPage() {
     api.getTasks().then(setTasks).catch(console.error);
   }, []);
 
+  const exportSummary = (format: 'pdf' | 'excel') => {
+    if (!stats) return;
+    type SummaryRow = { metric: string; value: string };
+    const rows: SummaryRow[] = [
+      { metric: 'Tareas totales', value: String(stats.total) },
+      { metric: 'Pendientes', value: String(stats.byStatus.pendiente) },
+      { metric: 'En progreso', value: String(stats.byStatus.en_progreso) },
+      { metric: 'Completadas', value: String(stats.byStatus.completada) },
+      { metric: 'Vencidas', value: String(stats.overdue) },
+      { metric: '% completado', value: `${stats.completionRate}%` },
+    ];
+    const columns: ExportColumn<SummaryRow>[] = [
+      { header: 'Métrica', value: (row) => row.metric },
+      { header: 'Valor', value: (row) => row.value },
+    ];
+    const meta = {
+      title: 'Resumen de productividad — TaskFlow',
+      subtitle: 'Indicadores del tablero de tareas',
+      filenameBase: `resumen-taskflow-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, columns, rows, TASKFLOW_THEME);
+    else downloadExcel(meta, columns, rows, 'Resumen');
+  };
+
   const now = Date.now();
   const upcoming = tasks
     .filter((task) => task.status !== 'completada' && task.dueDate)
@@ -35,9 +63,12 @@ export function DashboardPage() {
           <p className="eyebrow">Panel principal</p>
           <h1>Dashboard de tareas</h1>
         </div>
-        <Link to="/tablero" className="btn btn--primary">
-          Ir al tablero <ArrowRight size={16} />
-        </Link>
+        <div className="header-actions">
+          <ExportMenu onExport={exportSummary} disabled={!stats} />
+          <Link to="/tablero" className="btn btn--primary">
+            Ir al tablero <ArrowRight size={16} />
+          </Link>
+        </div>
       </header>
 
       <div className="kpi-grid">

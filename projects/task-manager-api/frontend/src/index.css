@@ -639,7 +639,44 @@ input, textarea, select, button { font: inherit; }
   align-items: flex-end;
   gap: 16px;
   margin-bottom: 28px;
+  flex-wrap: wrap;
 }
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.export-menu { position: relative; }
+.export-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  z-index: 20;
+}
+.export-menu__dropdown button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.export-menu__dropdown button:hover { background: rgba(255, 255, 255, 0.06); }
+
 .page-header h1 {
   font-size: 1.75rem;
   font-weight: 800;

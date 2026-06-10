@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../../utils/exportReports';
 import { useDashboardController } from '../../controllers/useDashboardController';
-import type { PeriodFilter } from '../../models/Metric';
+import type { KpiMetric, PeriodFilter } from '../../models/Metric';
+import { ExportMenu } from '../components/ExportMenu';
 import { KpiCard } from '../components/KpiCard';
 import { RevenueChart } from '../components/RevenueChart';
 import { StatusBadge } from '../components/StatusBadge';
@@ -12,6 +14,8 @@ const PERIODS: { value: PeriodFilter; label: string }[] = [
   { value: '6m', label: '6 meses' },
   { value: '12m', label: '12 meses' },
 ];
+
+const METRIX_THEME = { accentRgb: [99, 102, 241] as [number, number, number] };
 
 export function DashboardPage() {
   const {
@@ -26,6 +30,30 @@ export function DashboardPage() {
     customersById,
   } = useDashboardController();
 
+  const exportDashboard = (format: 'pdf' | 'excel') => {
+    const formatValue = (metric: KpiMetric) => {
+      if (metric.format === 'currency') return `$${metric.value.toLocaleString()}`;
+      if (metric.format === 'percent') return `${metric.value}%`;
+      return metric.value.toLocaleString();
+    };
+    const columns: ExportColumn<KpiMetric>[] = [
+      { header: 'Indicador', value: (kpi) => kpi.label },
+      { header: 'Valor', value: (kpi) => formatValue(kpi) },
+      {
+        header: 'Variación',
+        value: (kpi) =>
+          kpi.change === null ? '—' : `${kpi.change >= 0 ? '+' : ''}${kpi.change}% vs mes anterior`,
+      },
+    ];
+    const meta = {
+      title: 'Resumen ejecutivo — Metrix',
+      subtitle: `Periodo: ${PERIODS.find((item) => item.value === period)?.label ?? period}`,
+      filenameBase: `dashboard-metrix-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, columns, kpis, METRIX_THEME);
+    else downloadExcel(meta, columns, kpis, 'KPIs');
+  };
+
   return (
     <div>
       <header className="page-header">
@@ -33,7 +61,9 @@ export function DashboardPage() {
           <p className="eyebrow">Panel empresarial</p>
           <h1>Dashboard</h1>
         </div>
-        <div className="filters">
+        <div className="page-header__actions">
+          <ExportMenu onExport={exportDashboard} disabled={!kpis.length} />
+          <div className="filters">
           {PERIODS.map((item) => (
             <button
               key={item.value}
@@ -44,6 +74,7 @@ export function DashboardPage() {
               {item.label}
             </button>
           ))}
+          </div>
         </div>
       </header>
 

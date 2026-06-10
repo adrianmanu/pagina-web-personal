@@ -12,7 +12,7 @@ const FEATURES = [
   { icon: Database, label: 'ETL automatizado desde APIs REST' },
   { icon: BarChart3, label: 'Dashboard analítico en tiempo real' },
   { icon: Shield, label: 'Autenticación segura con JWT' },
-  { icon: Zap, label: 'Exportación instantánea CSV y JSON' },
+  { icon: Zap, label: 'Exportación de reportes PDF y Excel' },
 ];
 
 export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProps) {

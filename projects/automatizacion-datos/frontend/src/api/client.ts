@@ -221,54 +221,6 @@ function allRecords(): SaleRecord[] {
   );
 }
 
-// ─── Exportación de reportes (generados en el navegador) ───
-
-function buildCsv(records: SaleRecord[]): string {
-  const header = 'id,external_id,product_name,quantity,unit_price,customer,total,extracted_at';
-  const rows = records.map((r) =>
-    [
-      r.id,
-      r.external_id,
-      `"${r.product_name.replace(/"/g, '""')}"`,
-      r.quantity,
-      r.unit_price,
-      `"${r.customer.replace(/"/g, '""')}"`,
-      r.total,
-      r.extracted_at,
-    ].join(','),
-  );
-  return [header, ...rows].join('\n');
-}
-
-export async function downloadReport(path: string, filename: string): Promise<void> {
-  await delay();
-  requireSession();
-  const records = allRecords();
-  if (!records.length) throw new Error('No hay registros para exportar. Ejecuta un job ETL primero.');
-
-  const isCsv = path.includes('csv');
-  const content = isCsv
-    ? buildCsv(records)
-    : JSON.stringify(
-        {
-          generated_at: new Date().toISOString(),
-          total_records: records.length,
-          total_revenue: records.reduce((sum, r) => sum + r.total, 0),
-          records,
-        },
-        null,
-        2,
-      );
-
-  const blob = new Blob([content], { type: isCsv ? 'text/csv' : 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
 // ─── API demo (misma interfaz que el backend FastAPI) ───
 
 export const api = {

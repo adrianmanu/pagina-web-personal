@@ -1,8 +1,20 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Check, PackagePlus, X } from 'lucide-react';
+import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
+import { ExportMenu } from '../components/ui/ExportMenu';
 import { api, type Product } from '../api/client';
 
 const emptyForm = { name: '', sku: '', stock: 0, price: 0, category: '' };
+
+const STOCKFLOW_THEME = { accentRgb: [244, 63, 94] as [number, number, number] };
+
+const PRODUCT_COLUMNS: ExportColumn<Product>[] = [
+  { header: 'Nombre', value: (item) => item.name },
+  { header: 'SKU', value: (item) => item.sku },
+  { header: 'Stock', value: (item) => item.stock },
+  { header: 'Precio', value: (item) => item.price },
+  { header: 'Categoría', value: (item) => item.category },
+];
 
 export function ProductsPage() {
   const [items, setItems] = useState<Product[]>([]);
@@ -61,12 +73,29 @@ export function ProductsPage() {
     }
   };
 
+  const exportProducts = (format: 'pdf' | 'excel') => {
+    if (!items.length) {
+      setError('No hay productos para exportar.');
+      return;
+    }
+    const meta = {
+      title: 'Inventario de productos — StockFlow',
+      subtitle: `${items.length} productos registrados`,
+      filenameBase: `inventario-stockflow-${new Date().toISOString().slice(0, 10)}`,
+    };
+    if (format === 'pdf') downloadPdf(meta, PRODUCT_COLUMNS, items, STOCKFLOW_THEME);
+    else downloadExcel(meta, PRODUCT_COLUMNS, items, 'Productos');
+  };
+
   return (
     <div>
       <header className="page-header">
         <div>
           <p className="eyebrow">CRUD</p>
           <h1>Productos</h1>
+        </div>
+        <div className="header-actions">
+          <ExportMenu onExport={exportProducts} disabled={!items.length} />
         </div>
       </header>
 
