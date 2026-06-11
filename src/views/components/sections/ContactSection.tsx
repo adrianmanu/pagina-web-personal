@@ -1,6 +1,7 @@
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../ui/SocialIcons';
 import type { Profile } from '../../../models';
+import { getWhatsAppUrl } from '../../../utils/phone';
 import { Button } from '../ui/Button';
 import { SectionTitle } from '../ui/SectionTitle';
 import './ContactSection.css';
@@ -36,7 +37,12 @@ export function ContactSection({ profile }: ContactSectionProps) {
               <Phone size={20} className="contact__icon" />
               <div>
                 <span className="contact__label">Teléfono</span>
-                <a href={`tel:${profile.phone.replace(/\s/g, '')}`} className="contact__value">
+                <a
+                  href={getWhatsAppUrl(profile.phone)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact__value"
+                >
                   {profile.phone}
                 </a>
               </div>

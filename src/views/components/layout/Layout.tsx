@@ -35,7 +35,7 @@ export function Layout({
         onToggleMenu={onToggleMenu}
       />
       <main>{children}</main>
-      <Footer profile={profile} />
+      <Footer />
     </>
   );
 }

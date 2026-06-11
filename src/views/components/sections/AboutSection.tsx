@@ -1,5 +1,6 @@
 import { Code2, Layers, Shield } from 'lucide-react';
 import type { Profile } from '../../../models';
+import { getWhatsAppUrl } from '../../../utils/phone';
 import { SectionTitle } from '../ui/SectionTitle';
 import './AboutSection.css';
 
@@ -51,7 +52,12 @@ export function AboutSection({ profile }: AboutSectionProps) {
               </div>
               <div className="about__info-item">
                 <span className="about__info-label">Teléfono</span>
-                <a href={`tel:${profile.phone.replace(/\s/g, '')}`} className="about__info-value about__info-link">
+                <a
+                  href={getWhatsAppUrl(profile.phone)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="about__info-value about__info-link"
+                >
                   {profile.phone}
                 </a>
               </div>
