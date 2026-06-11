@@ -1,4 +1,4 @@
-import type { Profile, Project, Skill, NavItem } from '../models';
+import type { Profile, Project, Skill, NavItem, ServiceOffering } from '../models';
 
 const PROFILE: Profile = {
   name: 'Adrian Esteban Ramos Acosta',
@@ -15,9 +15,321 @@ const PROFILE: Profile = {
 const NAV_ITEMS: NavItem[] = [
   { id: 'inicio', label: 'Inicio', href: '#inicio' },
   { id: 'sobre-mi', label: 'Sobre mí', href: '#sobre-mi' },
+  { id: 'servicios', label: 'Servicios', href: '#servicios' },
   { id: 'habilidades', label: 'Habilidades', href: '#habilidades' },
   { id: 'proyectos', label: 'Proyectos', href: '#proyectos' },
   { id: 'contacto', label: 'Contacto', href: '#contacto' },
+];
+
+const SERVICES: ServiceOffering[] = [
+  {
+    id: 'web-corporate',
+    title: 'Páginas web corporativas',
+    description:
+      'Sitios institucionales para empresas, negocios o profesionales con diseño moderno y responsive.',
+    category: 'web',
+  },
+  {
+    id: 'web-landing',
+    title: 'Landing pages',
+    description:
+      'Páginas de aterrizaje enfocadas en conversión: captar leads, promocionar un producto o lanzar una campaña.',
+    category: 'web',
+  },
+  {
+    id: 'web-portfolio',
+    title: 'Portafolios y sitios personales',
+    description:
+      'Presencia digital profesional para freelancers, artistas, consultores o cualquier marca personal.',
+    category: 'web',
+  },
+  {
+    id: 'web-blog',
+    title: 'Blogs y sitios de contenido',
+    description:
+      'Plataformas para publicar artículos, noticias, tutoriales o contenido SEO con panel de administración.',
+    category: 'web',
+  },
+  {
+    id: 'web-redesign',
+    title: 'Rediseño y modernización',
+    description:
+      'Actualizo sitios antiguos: nuevo diseño, mejor rendimiento, versión móvil y tecnologías actuales.',
+    category: 'web',
+  },
+  {
+    id: 'web-multilang',
+    title: 'Sitios multilingües',
+    description:
+      'Páginas web en varios idiomas para llegar a más clientes en Ecuador y el exterior.',
+    category: 'web',
+  },
+  {
+    id: 'web-niche',
+    title: 'Sitios por rubro',
+    description:
+      'Web a medida para restaurantes, clínicas, abogados, inmobiliarias, gimnasios, talleres y más.',
+    category: 'web',
+  },
+  {
+    id: 'ecommerce-store',
+    title: 'Tiendas online (e-commerce)',
+    description:
+      'Tienda completa con catálogo, carrito, checkout y panel para administrar productos y pedidos.',
+    category: 'commerce',
+  },
+  {
+    id: 'ecommerce-catalog',
+    title: 'Catálogos digitales con pedidos',
+    description:
+      'Muestra tus productos o servicios online y recibe pedidos por WhatsApp, email o formulario.',
+    category: 'commerce',
+  },
+  {
+    id: 'ecommerce-payments',
+    title: 'Pasarelas de pago',
+    description:
+      'Integración de pagos en línea para cobrar con tarjeta, transferencia u otros métodos seguros.',
+    category: 'commerce',
+  },
+  {
+    id: 'ecommerce-orders',
+    title: 'Gestión de pedidos online',
+    description:
+      'Panel para ver, confirmar, despachar y dar seguimiento a todos los pedidos de tu negocio.',
+    category: 'commerce',
+  },
+  {
+    id: 'ecommerce-marketplace',
+    title: 'Marketplaces y plataformas',
+    description:
+      'Sistemas donde varios vendedores publican productos y los clientes compran en un solo lugar.',
+    category: 'commerce',
+  },
+  {
+    id: 'biz-inventory',
+    title: 'Control de inventario',
+    description:
+      'Registra productos, entradas, salidas, stock mínimo y alertas. Ideal para bodegas, tiendas y distribuidoras.',
+    category: 'business',
+  },
+  {
+    id: 'biz-invoicing',
+    title: 'Facturación y ventas',
+    description:
+      'Emite facturas, controla clientes, descuenta stock automáticamente y genera reportes de ventas.',
+    category: 'business',
+  },
+  {
+    id: 'biz-pos',
+    title: 'Punto de venta (POS)',
+    description:
+      'Sistema de caja para registrar ventas rápidas en mostrador, con impresión o envío de comprobantes.',
+    category: 'business',
+  },
+  {
+    id: 'biz-crm',
+    title: 'CRM — gestión de clientes',
+    description:
+      'Organiza contactos, historial de compras, seguimiento de oportunidades y comunicación con clientes.',
+    category: 'business',
+  },
+  {
+    id: 'biz-expenses',
+    title: 'Control de gastos y finanzas',
+    description:
+      'Registra ingresos, egresos, cuentas por cobrar y reportes financieros básicos para tu negocio.',
+    category: 'business',
+  },
+  {
+    id: 'biz-hr',
+    title: 'Gestión de personal',
+    description:
+      'Control de empleados, asistencia, turnos, permisos y datos del equipo en un solo sistema.',
+    category: 'business',
+  },
+  {
+    id: 'biz-booking',
+    title: 'Reservas y citas',
+    description:
+      'Agenda online para clínicas, salones, consultorios, hoteles o cualquier negocio con turnos.',
+    category: 'business',
+  },
+  {
+    id: 'biz-documents',
+    title: 'Gestión documental',
+    description:
+      'Archiva, busca y organiza documentos legales, contratos o archivos institucionales con control de acceso.',
+    category: 'business',
+  },
+  {
+    id: 'biz-dashboard',
+    title: 'Dashboards y KPIs',
+    description:
+      'Paneles visuales con métricas en tiempo real: ventas, inventario, productividad y rendimiento.',
+    category: 'business',
+  },
+  {
+    id: 'biz-reports',
+    title: 'Reportes en PDF y Excel',
+    description:
+      'Exporta información de tu sistema en formatos listos para imprimir, enviar o analizar.',
+    category: 'business',
+  },
+  {
+    id: 'mobile-android',
+    title: 'Apps Android nativas',
+    description:
+      'Aplicaciones móviles instalables con diseño moderno, rendimiento nativo y publicación en Play Store.',
+    category: 'mobile',
+  },
+  {
+    id: 'mobile-field',
+    title: 'Apps de operaciones en campo',
+    description:
+      'Herramientas para equipos en terreno: rondas, entregas, inspecciones, checklists y geolocalización.',
+    category: 'mobile',
+  },
+  {
+    id: 'mobile-audit',
+    title: 'Apps de registro y auditoría',
+    description:
+      'Captura evidencias, fotos, firmas y reportes desde el celular con sincronización en la nube.',
+    category: 'mobile',
+  },
+  {
+    id: 'mobile-cloud',
+    title: 'Apps con sincronización cloud',
+    description:
+      'Datos disponibles en móvil y web al mismo tiempo, con respaldo automático y acceso multiusuario.',
+    category: 'mobile',
+  },
+  {
+    id: 'data-etl',
+    title: 'Automatización de datos (ETL)',
+    description:
+      'Extrae información de APIs, hojas de cálculo o sistemas externos y consolídala automáticamente.',
+    category: 'data',
+  },
+  {
+    id: 'data-reports',
+    title: 'Reportes automáticos',
+    description:
+      'Genera informes periódicos sin intervención manual: ventas diarias, inventario semanal, métricas mensuales.',
+    category: 'data',
+  },
+  {
+    id: 'data-sync',
+    title: 'Sincronización entre sistemas',
+    description:
+      'Conecta dos o más plataformas para que los datos se actualicen solos entre ellas.',
+    category: 'data',
+  },
+  {
+    id: 'data-scraping',
+    title: 'Recolección y consolidación',
+    description:
+      'Reúne datos de fuentes públicas o privadas y organízalos en un formato útil para tu negocio.',
+    category: 'data',
+  },
+  {
+    id: 'data-analytics',
+    title: 'Análisis y visualización',
+    description:
+      'Convierte tus datos en gráficos, tendencias y conclusiones para tomar mejores decisiones.',
+    category: 'data',
+  },
+  {
+    id: 'int-api',
+    title: 'APIs REST a medida',
+    description:
+      'Backend robusto para que tu web, app o terceros consuman datos de forma segura y escalable.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-external',
+    title: 'Integración con servicios externos',
+    description:
+      'Conecto tu sistema con WhatsApp, email, mapas, pasarelas de pago, ERPs u otras herramientas.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-auth',
+    title: 'Login, roles y permisos',
+    description:
+      'Sistemas de acceso con usuarios, contraseñas, recuperación y niveles de permiso por rol.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-microservices',
+    title: 'Arquitectura de microservicios',
+    description:
+      'Sistemas modulares y escalables para proyectos que crecen en complejidad y volumen de usuarios.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-migration',
+    title: 'Migración de datos',
+    description:
+      'Traslado seguro de información entre sistemas antiguos y nuevos sin perder historial.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-search',
+    title: 'Búsqueda avanzada',
+    description:
+      'Motores de búsqueda rápidos con filtros, autocompletado y resultados relevantes en grandes volúmenes.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-chatbot',
+    title: 'Chatbots y asistentes',
+    description:
+      'Atención automática 24/7 para responder preguntas frecuentes y captar leads en tu web.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-notifications',
+    title: 'Notificaciones automáticas',
+    description:
+      'Alertas por email, SMS o WhatsApp cuando ocurre un evento: pedido nuevo, stock bajo, cita confirmada.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-maps',
+    title: 'Mapas y geolocalización',
+    description:
+      'Rutas, ubicación en tiempo real, zonas de cobertura y seguimiento de equipos en el mapa.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-media',
+    title: 'Procesamiento de archivos',
+    description:
+      'Subida, compresión y gestión de imágenes, PDFs, videos o documentos en la nube.',
+    category: 'integrations',
+  },
+  {
+    id: 'int-tickets',
+    title: 'Soporte y tickets',
+    description:
+      'Sistema de incidencias para que clientes o empleados reporten problemas y den seguimiento.',
+    category: 'integrations',
+  },
+  {
+    id: 'custom-idea',
+    title: 'Proyecto 100% a medida',
+    description:
+      '¿Tienes una idea única? La analizamos juntos y construyo la solución exacta que necesitas.',
+    category: 'custom',
+  },
+  {
+    id: 'custom-consult',
+    title: 'Consultoría técnica',
+    description:
+      'Te asesoro sobre qué tecnología usar, cómo estructurar tu proyecto y cuál es el mejor camino.',
+    category: 'custom',
+  },
 ];
 
 const SKILLS: Skill[] = [
@@ -192,6 +504,10 @@ export class PortfolioService {
 
   static getSkills(): Skill[] {
     return SKILLS;
+  }
+
+  static getServices(): ServiceOffering[] {
+    return SERVICES;
   }
 
   static getProjects(): Project[] {
