@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (backLink) backLink.href = base;
 
   document.querySelectorAll('[data-github-path]').forEach((link) => {
+    if (window.PORTFOLIO_CONFIG?.hideSourceCode) {
+      link.remove();
+      return;
+    }
+
     const path = link.getAttribute('data-github-path');
     if (path && window.githubTreeUrl) link.href = window.githubTreeUrl(path);
   });
