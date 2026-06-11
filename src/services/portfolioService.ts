@@ -9,6 +9,7 @@ const PROFILE: Profile = {
   email: 'adrianestebanra@hotmail.com',
   phone: '+593 97 916 5437',
   location: 'Quito, Ecuador',
+  linkedin: 'https://www.linkedin.com/in/adrian-e-ramos',
 };
 
 const NAV_ITEMS: NavItem[] = [

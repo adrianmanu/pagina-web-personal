@@ -1,5 +1,5 @@
 import { Download, ExternalLink, Play, Smartphone, Star } from 'lucide-react';
-import { resolveGithubTreeUrl, resolvePublicUrl } from '../../../config/site';
+import { isFreelanceMode, resolveGithubTreeUrl, resolvePublicUrl } from '../../../config/site';
 import { GithubIcon } from '../ui/SocialIcons';
 import type { Project } from '../../../models';
 import { Badge } from '../ui/Badge';
@@ -70,7 +70,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         <div className="project-card__links">
-          {githubUrl && githubUrl !== '#' && (
+          {!isFreelanceMode && githubUrl && githubUrl !== '#' && (
             <a
               href={githubUrl}
               target="_blank"

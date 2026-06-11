@@ -42,6 +42,7 @@ jobs:
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
           VITE_GITHUB_REPO: ${{ github.repository }}
+          VITE_SITE_MODE: portfolio
 
       - name: Instalar dependencias del dashboard
         run: npm ci

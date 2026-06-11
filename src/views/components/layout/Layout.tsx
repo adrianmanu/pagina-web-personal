@@ -1,11 +1,10 @@
 import type { ReactNode } from 'react';
-import type { NavItem, Profile } from '../../../models';
+import type { NavItem } from '../../../models';
 import { Header } from './Header';
 import { Footer } from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
-  profile: Profile;
   navItems: NavItem[];
   activeSection: string;
   isScrolled: boolean;
@@ -16,7 +15,6 @@ interface LayoutProps {
 
 export function Layout({
   children,
-  profile,
   navItems,
   activeSection,
   isScrolled,

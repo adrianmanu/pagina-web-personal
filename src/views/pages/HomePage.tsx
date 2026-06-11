@@ -15,7 +15,6 @@ export function HomePage() {
 
   return (
     <Layout
-      profile={profile}
       navItems={navItems}
       activeSection={activeSection}
       isScrolled={isScrolled}
