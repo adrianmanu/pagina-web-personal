@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -19,3 +20,5 @@ if (existsSync(configPath)) {
   writeFileSync(configPath, updated);
   console.log('Enabled hideSourceCode for demo pages in freelance build.');
 }
+
+execSync('node scripts/generate-sitemap.mjs', { stdio: 'inherit' });
