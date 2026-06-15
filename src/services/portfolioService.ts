@@ -545,7 +545,7 @@ const PROJECTS: Project[] = [
     longDescription:
       'Demo del paquete esencial ($230): sitio compacto con inicio, carta por categorías con fotos y precios, horarios, mapa, teléfono y botón a WhatsApp. Incluye enlaces a Instagram y Facebook. Ideal para mostrar la opción de entrada antes del paquete profesional.',
     technologies: ['React', 'TypeScript', 'CSS3', 'WhatsApp', 'Google Maps'],
-    category: 'web',
+    category: 'frontend',
     featured: true,
     githubPath: 'projects/restaurant-web-basic',
     liveUrl: 'demos/restaurant-web-basic/',
@@ -567,7 +567,7 @@ const PROJECTS: Project[] = [
     longDescription:
       'Demo del paquete profesional para restaurantes en React + TypeScript: secciones de nosotros, carta con precios, promociones, galería, horarios, mapa, redes sociales, reservas por WhatsApp y enlaces a apps de delivery. Contenido centralizado para personalizar por cliente.',
     technologies: ['React', 'TypeScript', 'CSS3', 'WhatsApp', 'Google Maps'],
-    category: 'web',
+    category: 'frontend',
     featured: true,
     githubPath: 'projects/restaurant-web',
     liveUrl: 'demos/restaurant-web/',
