@@ -58,6 +58,12 @@ buildDemo(
   '/apps/ecommerce-store/',
   'apps/ecommerce-store',
 );
+buildDemo(
+  'TiendaNova Básica',
+  'projects/ecommerce-store-basic',
+  '/apps/ecommerce-store-basic/',
+  'apps/ecommerce-store-basic',
+);
 
 console.log('\n📦 Preparando artefactos para Cloudflare...');
 run('node scripts/prepare-freelance-dist.mjs');

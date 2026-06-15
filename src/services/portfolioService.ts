@@ -513,6 +513,28 @@ const PROJECTS: Project[] = [
       'Roles administrador y cliente con flujo completo',
     ],
   },
+  {
+    id: 'ecommerce-store-basic',
+    title: 'TiendaNova Básica — E-commerce Esencial',
+    company: 'Portafolio Personal',
+    period: '2026',
+    description:
+      'Plan básico para emprendimientos: catálogo, carrito, pedidos como invitado y panel admin simple.',
+    longDescription:
+      'Demo del plan básico ($450): tienda sin cuentas de cliente, checkout como invitado, disponible/agotado manual sin inventario numérico, máximo 30 productos y pedidos con estados nuevo/atendido. Ideal para mostrar la opción de entrada antes de ampliar al plan completo.',
+    technologies: ['React', 'TypeScript', 'React Router', 'localStorage', 'CSS3'],
+    category: 'fullstack',
+    featured: true,
+    githubPath: 'projects/ecommerce-store-basic',
+    liveUrl: 'demos/ecommerce-store-basic/',
+    imageGradient: 'linear-gradient(135deg, #8b5a3c 0%, #d4a574 100%)',
+    highlights: [
+      'Pedidos como invitado sin registro de clientes',
+      'Disponible / agotado manual (sin stock numérico)',
+      'Panel admin: productos (máx. 30) y pedidos',
+      'Estados de pedido: nuevo y atendido',
+    ],
+  },
 ];
 
 export class PortfolioService {

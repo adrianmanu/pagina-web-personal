@@ -369,6 +369,15 @@ th { background: var(--surface-2); font-size: 0.8rem; text-transform: uppercase;
 }
 .image-upload__replace input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
+.filter-chip {
+  display: block; width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 6px;
+  border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg);
+  color: var(--muted); cursor: pointer; font-weight: 600;
+}
+.filter-chip.active, .filter-chip:hover {
+  border-color: rgba(196, 92, 62, 0.4); color: var(--accent-light); background: var(--accent-soft);
+}
+
 .pagination {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap;

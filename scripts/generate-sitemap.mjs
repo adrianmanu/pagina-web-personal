@@ -13,12 +13,14 @@ const paths = [
   { path: '/demos/task-manager-api/', priority: '0.8', changefreq: 'monthly' },
   { path: '/demos/metrics-dashboard/', priority: '0.8', changefreq: 'monthly' },
   { path: '/demos/ecommerce-store/', priority: '0.8', changefreq: 'monthly' },
+  { path: '/demos/ecommerce-store-basic/', priority: '0.8', changefreq: 'monthly' },
   { path: '/demos/gusvivan-mobile/', priority: '0.8', changefreq: 'monthly' },
   { path: '/demos/utic-documental/', priority: '0.7', changefreq: 'monthly' },
   { path: '/apps/automatizacion-datos/', priority: '0.7', changefreq: 'monthly' },
   { path: '/apps/inventory-api/', priority: '0.7', changefreq: 'monthly' },
   { path: '/apps/task-manager/', priority: '0.7', changefreq: 'monthly' },
   { path: '/apps/ecommerce-store/', priority: '0.7', changefreq: 'monthly' },
+  { path: '/apps/ecommerce-store-basic/', priority: '0.7', changefreq: 'monthly' },
   { path: '/metrics-dashboard/', priority: '0.7', changefreq: 'monthly' },
 ];
 

@@ -1,13 +1,13 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Menu, Search, ShoppingBag, User, X } from 'lucide-react';
+import { Menu, ShoppingBag, User, X } from 'lucide-react';
 import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAdminAuth } from '../../context/AdminAuthContext';
 import { useCart } from '../../context/CartContext';
-import { storeService } from '../../services/authService';
+import { storeService } from '../../services/adminAuthService';
 
 export function StoreLayout() {
   const { count } = useCart();
-  const { user } = useAuth();
+  const { admin } = useAdminAuth();
   const store = storeService.get();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,9 +21,9 @@ export function StoreLayout() {
   return (
     <div className="store">
       <div className="demo-banner">
-        Demo interactiva · Los datos se guardan en tu navegador
-        {user?.role === 'admin' && (
-          <Link to="/admin/dashboard" className="demo-banner__link">
+        Demo Plan Básico · Pedidos como invitado · Sin cuentas de cliente
+        {admin && (
+          <Link to="/admin/productos" className="demo-banner__link">
             Ir al panel admin →
           </Link>
         )}
@@ -52,10 +52,7 @@ export function StoreLayout() {
         </nav>
 
         <div className="store-actions">
-          <Link to="/tienda" className="icon-btn" aria-label="Buscar">
-            <Search size={18} />
-          </Link>
-          <Link to="/cuenta" className="icon-btn" aria-label="Cuenta">
+          <Link to="/admin/login" className="icon-btn" aria-label="Panel administrador" title="Panel administrador">
             <User size={18} />
           </Link>
           <Link to="/carrito" className="icon-btn cart-btn" aria-label="Carrito">
