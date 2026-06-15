@@ -52,6 +52,12 @@ buildDemo(
   '/apps/task-manager/',
   'apps/task-manager',
 );
+buildDemo(
+  'TiendaNova',
+  'projects/ecommerce-store',
+  '/apps/ecommerce-store/',
+  'apps/ecommerce-store',
+);
 
 console.log('\n📦 Preparando artefactos para Cloudflare...');
 run('node scripts/prepare-freelance-dist.mjs');

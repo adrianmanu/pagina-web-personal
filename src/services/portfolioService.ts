@@ -491,6 +491,28 @@ const PROJECTS: Project[] = [
       'Exportación de tareas y resumen en PDF y Excel',
     ],
   },
+  {
+    id: 'ecommerce-store',
+    title: 'TiendaNova — E-commerce Completo',
+    company: 'Portafolio Personal',
+    period: '2026',
+    description:
+      'Tienda online con catálogo, filtros, carrito, pedidos, cuentas de cliente y panel administrador con inventario.',
+    longDescription:
+      'Demo de e-commerce completo en React + TypeScript: tienda pública con categorías y filtros, registro de clientes, checkout, historial de pedidos y panel admin con CRUD de productos, categorías, inventario, pedidos y usuarios. Datos persistentes en localStorage para probar el flujo sin backend.',
+    technologies: ['React', 'TypeScript', 'React Router', 'localStorage', 'CSS3'],
+    category: 'fullstack',
+    featured: true,
+    githubPath: 'projects/ecommerce-store',
+    liveUrl: 'demos/ecommerce-store/',
+    imageGradient: 'linear-gradient(135deg, #c45c3e 0%, #f4a261 100%)',
+    highlights: [
+      'Catálogo con categorías, filtros y carrito de compras',
+      'Cuentas de cliente con historial de pedidos',
+      'Panel admin: productos, inventario, pedidos y usuarios',
+      'Roles administrador y cliente con flujo completo',
+    ],
+  },
 ];
 
 export class PortfolioService {
