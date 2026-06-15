@@ -535,6 +535,50 @@ const PROJECTS: Project[] = [
       'Estados de pedido: nuevo y atendido',
     ],
   },
+  {
+    id: 'restaurant-web-basic',
+    title: 'Mi Restaurante — Web Esencial',
+    company: 'Portafolio Personal',
+    period: '2026',
+    description:
+      'Paquete esencial para restaurantes: menú con fotos, horarios, ubicación y WhatsApp.',
+    longDescription:
+      'Demo del paquete esencial ($230): sitio compacto con inicio, carta por categorías con fotos y precios, horarios, mapa, teléfono y botón a WhatsApp. Incluye enlaces a Instagram y Facebook. Ideal para mostrar la opción de entrada antes del paquete profesional.',
+    technologies: ['React', 'TypeScript', 'CSS3', 'WhatsApp', 'Google Maps'],
+    category: 'web',
+    featured: true,
+    githubPath: 'projects/restaurant-web-basic',
+    liveUrl: 'demos/restaurant-web-basic/',
+    imageGradient: 'linear-gradient(135deg, #5c3d2e 0%, #a67c52 100%)',
+    highlights: [
+      'Menú por categorías con fotos y precios',
+      'Horarios y mapa de ubicación',
+      'Contacto directo por WhatsApp',
+      'Enlaces a Instagram y Facebook',
+    ],
+  },
+  {
+    id: 'restaurant-web',
+    title: 'Mi Restaurante — Web Profesional',
+    company: 'Portafolio Personal',
+    period: '2026',
+    description:
+      'Sitio multipágina para restaurantes: menú con fotos, reservas, galería, promociones, horarios y delivery.',
+    longDescription:
+      'Demo del paquete profesional para restaurantes en React + TypeScript: secciones de nosotros, carta con precios, promociones, galería, horarios, mapa, redes sociales, reservas por WhatsApp y enlaces a apps de delivery. Contenido centralizado para personalizar por cliente.',
+    technologies: ['React', 'TypeScript', 'CSS3', 'WhatsApp', 'Google Maps'],
+    category: 'web',
+    featured: true,
+    githubPath: 'projects/restaurant-web',
+    liveUrl: 'demos/restaurant-web/',
+    imageGradient: 'linear-gradient(135deg, #7a2e2e 0%, #c9a227 100%)',
+    highlights: [
+      'Menú por categorías con precios',
+      'Reservas vía WhatsApp y formulario',
+      'Galería, promociones y horarios',
+      'Mapa, redes sociales y delivery',
+    ],
+  },
 ];
 
 export class PortfolioService {

@@ -64,6 +64,18 @@ buildDemo(
   '/apps/ecommerce-store-basic/',
   'apps/ecommerce-store-basic',
 );
+buildDemo(
+  'Mi Restaurante Esencial',
+  'projects/restaurant-web-basic',
+  '/apps/restaurant-web-basic/',
+  'apps/restaurant-web-basic',
+);
+buildDemo(
+  'X Lo Alto Restaurante',
+  'projects/restaurant-web',
+  '/apps/restaurant-web/',
+  'apps/restaurant-web',
+);
 
 console.log('\n📦 Preparando artefactos para Cloudflare...');
 run('node scripts/prepare-freelance-dist.mjs');
