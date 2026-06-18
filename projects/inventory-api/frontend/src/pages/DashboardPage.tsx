@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
 import { ExportMenu } from '../components/ui/ExportMenu';
-import { api, type InventorySummary, type SalesSummary } from '../api/client';
+import { api, type InventorySummary, type SalesSummary } from '../api';
 
 const STOCKFLOW_THEME = { accentRgb: [244, 63, 94] as [number, number, number] };
 

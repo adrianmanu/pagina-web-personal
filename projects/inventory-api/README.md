@@ -19,6 +19,7 @@ Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 - Dashboard con KPIs de inventario y ventas
 - CRUD de productos (nombre, SKU, stock, precio, categoría)
 - **Facturación**: emisión de facturas con descuento automático de stock
+- **Facturación electrónica SRI** (opcional): integración con [Datil](https://datil.dev) para comprobantes autorizados
 - Facturas a **consumidor final** o con **datos completos** (nombre, cédula/RUC, correo, dirección)
 - Validación de stock insuficiente al vender
 - Reposición rápida de stock sin editar el producto
@@ -45,6 +46,71 @@ npm run dev
 ```
 
 Abre: http://localhost:5176
+
+## Facturación electrónica SRI (Datil Lite)
+
+**Guía completa:** [SETUP-DATIL-LITE.md](./SETUP-DATIL-LITE.md)
+
+### 1. Requisitos
+
+- Cuenta **Datil Lite** mensual (~$8/mes) o el plan que elijas — [datil.com/planes](https://datil.com/planes) → **Por Mes** → Lite
+- API Key desde [app.datil.co](https://app.datil.co) → Configuración → API
+- Certificado `.p12` **subido en el panel de Datil** (no en este servidor)
+- Contraseña del `.p12` en `DATIL_CERTIFICATE_PASSWORD`
+- RUC, razón social y establecimiento `001` / punto `001` alineados con SRI en línea
+
+### 2. Configurar variables de entorno
+
+Copia `.env.example` a `.env` y completa tus datos:
+
+```bash
+cd projects/inventory-api
+cp .env.example .env   # en Windows: copy .env.example .env
+```
+
+Variables principales:
+
+| Variable | Descripción |
+|----------|-------------|
+| `DATIL_ENABLED` | `true` para activar SRI |
+| `DATIL_API_KEY` | Clave API de Datil |
+| `DATIL_CERTIFICATE_PASSWORD` | Contraseña del certificado .p12 |
+| `DATIL_AMBIENTE` | `1` pruebas · `2` producción |
+| `DATIL_RUC` | Tu RUC |
+| `DATIL_RAZON_SOCIAL` | Razón social |
+
+### 3. Levantar en modo live (backend + SRI)
+
+**PowerShell (backend):**
+
+```powershell
+cd projects/inventory-api
+Get-Content .env | ForEach-Object {
+  if ($_ -match '^\s*([^#][^=]+)=(.*)$') {
+    [Environment]::SetEnvironmentVariable($matches[1].Trim(), $matches[2].Trim(), 'Process')
+  }
+}
+mvn spring-boot:run
+```
+
+**Frontend con API real:**
+
+```bash
+cd projects/inventory-api/frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+El archivo `frontend/.env` debe tener `VITE_USE_LIVE_API=true`.
+
+### 4. Probar
+
+1. Regístrate o inicia sesión en http://localhost:5176
+2. Crea productos en **Productos**
+3. Emite una factura en **Facturación**
+4. Verifica el estado SRI: `AUTORIZADO`, `ENVIADO`, etc.
+5. Empieza siempre en **ambiente de pruebas** (`DATIL_AMBIENTE=1`)
 
 ## Arquitectura
 

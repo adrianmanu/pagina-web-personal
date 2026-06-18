@@ -1,5 +1,6 @@
 package com.adrian.inventory.service;
 
+import com.adrian.inventory.config.DatilProperties;
 import com.adrian.inventory.dto.InvoiceItemRequest;
 import com.adrian.inventory.dto.InvoiceRequest;
 import com.adrian.inventory.dto.InvoiceResponse;
@@ -23,10 +24,15 @@ public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final ProductRepository productRepository;
+    private final SriBillingService sriBillingService;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository) {
+    public InvoiceService(
+            InvoiceRepository invoiceRepository,
+            ProductRepository productRepository,
+            SriBillingService sriBillingService) {
         this.invoiceRepository = invoiceRepository;
         this.productRepository = productRepository;
+        this.sriBillingService = sriBillingService;
     }
 
     @Transactional
@@ -83,13 +89,51 @@ public class InvoiceService {
         }
 
         invoice.setTotal(Math.round(total * 100.0) / 100.0);
-        return InvoiceResponse.from(invoiceRepository.save(invoice));
+        Invoice saved = invoiceRepository.save(invoice);
+
+        if (sriBillingService.isEnabled()) {
+            try {
+                sriBillingService.emitInvoice(saved);
+            } catch (Exception ex) {
+                saved.setSriStatus("ERROR");
+                saved.setSriErrorMessage(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName());
+            }
+            saved = invoiceRepository.save(saved);
+        } else {
+            saved.setSriStatus("DISABLED");
+            saved = invoiceRepository.save(saved);
+        }
+
+        return InvoiceResponse.from(saved);
     }
 
     public List<InvoiceResponse> findAll(User user) {
         return invoiceRepository.findByUserIdOrderByIdDesc(user.getId()).stream()
                 .map(InvoiceResponse::from)
                 .toList();
+    }
+
+    public InvoiceResponse findById(Long id, User user) {
+        Invoice invoice = invoiceRepository
+                .findById(id)
+                .filter(item -> item.getUser().getId().equals(user.getId()))
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
+        return InvoiceResponse.from(invoice);
+    }
+
+    @Transactional
+    public InvoiceResponse refreshSriStatus(Long id, User user) {
+        Invoice invoice = invoiceRepository
+                .findById(id)
+                .filter(item -> item.getUser().getId().equals(user.getId()))
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
+
+        if (!sriBillingService.isEnabled()) {
+            throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "Facturación SRI no está configurada");
+        }
+
+        sriBillingService.refreshFromDatil(invoice);
+        return InvoiceResponse.from(invoiceRepository.save(invoice));
     }
 
     public SalesSummary getSummary(User user) {

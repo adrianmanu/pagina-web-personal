@@ -33,6 +33,13 @@ public class Invoice {
 
     private Double total;
 
+    private String sriStatus;
+    private String sriAccessKey;
+    private String sriAuthorizationNumber;
+    private String datilInvoiceId;
+    private String sriErrorMessage;
+    private Integer sriSecuencial;
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceItem> items = new ArrayList<>();
 
@@ -56,6 +63,18 @@ public class Invoice {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public Double getTotal() { return total; }
     public void setTotal(Double total) { this.total = total; }
+    public String getSriStatus() { return sriStatus; }
+    public void setSriStatus(String sriStatus) { this.sriStatus = sriStatus; }
+    public String getSriAccessKey() { return sriAccessKey; }
+    public void setSriAccessKey(String sriAccessKey) { this.sriAccessKey = sriAccessKey; }
+    public String getSriAuthorizationNumber() { return sriAuthorizationNumber; }
+    public void setSriAuthorizationNumber(String sriAuthorizationNumber) { this.sriAuthorizationNumber = sriAuthorizationNumber; }
+    public String getDatilInvoiceId() { return datilInvoiceId; }
+    public void setDatilInvoiceId(String datilInvoiceId) { this.datilInvoiceId = datilInvoiceId; }
+    public String getSriErrorMessage() { return sriErrorMessage; }
+    public void setSriErrorMessage(String sriErrorMessage) { this.sriErrorMessage = sriErrorMessage; }
+    public Integer getSriSecuencial() { return sriSecuencial; }
+    public void setSriSecuencial(Integer sriSecuencial) { this.sriSecuencial = sriSecuencial; }
     public List<InvoiceItem> getItems() { return items; }
     public void setItems(List<InvoiceItem> items) { this.items = items; }
 }

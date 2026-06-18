@@ -2,7 +2,7 @@ import { FormEvent, Fragment, useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Trash2, User, Users } from 'lucide-react';
 import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
 import { ExportMenu } from '../components/ui/ExportMenu';
-import { api, type Invoice, type Product } from '../api/client';
+import { api, type Invoice, type Product, type SriConfig } from '../api';
 
 interface Line {
   productId: number | '';
@@ -18,10 +18,20 @@ const INVOICE_COLUMNS: ExportColumn<Invoice>[] = [
   { header: 'Factura', value: (inv) => `#${inv.id}` },
   { header: 'Cliente', value: (inv) => inv.customerName },
   { header: 'Tipo', value: (inv) => (inv.finalConsumer ? 'Consumidor final' : 'Con datos') },
+  { header: 'SRI', value: (inv) => inv.sriStatus ?? '—' },
   { header: 'Ítems', value: (inv) => inv.items.length },
   { header: 'Total', value: (inv) => inv.total },
   { header: 'Fecha', value: (inv) => new Date(inv.createdAt).toLocaleString() },
 ];
+
+function sriBadgeClass(status?: string | null) {
+  if (!status) return 'badge';
+  const normalized = status.toUpperCase();
+  if (normalized === 'AUTORIZADO') return 'badge badge--success';
+  if (normalized === 'ERROR' || normalized === 'NO AUTORIZADO') return 'badge badge--danger';
+  if (normalized === 'DISABLED') return 'badge';
+  return 'badge badge--warning';
+}
 
 export function BillingPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -33,10 +43,13 @@ export function BillingPage() {
   const [success, setSuccess] = useState('');
   const [saving, setSaving] = useState(false);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [sriConfig, setSriConfig] = useState<SriConfig | null>(null);
+  const [refreshingId, setRefreshingId] = useState<number | null>(null);
 
   const load = () => {
     api.getProducts().then(setProducts);
     api.getInvoices().then(setInvoices);
+    api.getSriConfig().then(setSriConfig).catch(() => setSriConfig(null));
   };
   useEffect(() => { load(); }, []);
 
@@ -87,7 +100,10 @@ export function BillingPage() {
         ...(finalConsumer ? {} : customer),
         items,
       });
-      setSuccess(`Factura #${invoice.id} emitida por $${invoice.total.toLocaleString()}`);
+      const sriNote = invoice.sriStatus
+        ? ` · SRI: ${invoice.sriStatus}`
+        : '';
+      setSuccess(`Factura #${invoice.id} emitida por $${invoice.total.toLocaleString()}${sriNote}`);
       setCustomer(emptyCustomer);
       setLines([{ ...emptyLine }]);
       load();
@@ -112,6 +128,20 @@ export function BillingPage() {
     else downloadExcel(meta, INVOICE_COLUMNS, invoices, 'Facturas');
   };
 
+  const refreshSri = async (invoiceId: number) => {
+    setRefreshingId(invoiceId);
+    setError('');
+    try {
+      await api.refreshInvoiceSri(invoiceId);
+      load();
+      setSuccess(`Estado SRI actualizado para factura #${invoiceId}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo actualizar el estado SRI');
+    } finally {
+      setRefreshingId(null);
+    }
+  };
+
   return (
     <div>
       <header className="page-header">
@@ -123,6 +153,19 @@ export function BillingPage() {
           <ExportMenu onExport={exportInvoices} disabled={!invoices.length} />
         </div>
       </header>
+
+      {sriConfig?.configured && (
+        <div className="alert alert--success" role="status">
+          Facturación electrónica SRI activa vía Datil · {sriConfig.razonSocial} · RUC {sriConfig.ruc}
+          · Ambiente {sriConfig.ambiente === 1 ? 'pruebas' : 'producción'}
+        </div>
+      )}
+
+      {sriConfig?.enabled && !sriConfig.configured && (
+        <div className="alert alert--warning" role="status">
+          SRI habilitado pero faltan credenciales Datil. Configura el archivo `.env` del backend.
+        </div>
+      )}
 
       <div className="split">
         <form className="panel form-panel" onSubmit={handleSubmit}>
@@ -258,6 +301,7 @@ export function BillingPage() {
                   <th>Cliente</th>
                   <th>Ítems</th>
                   <th>Total</th>
+                  <th>SRI</th>
                   <th></th>
                 </tr>
               </thead>
@@ -273,6 +317,11 @@ export function BillingPage() {
                       </td>
                       <td>{invoice.items.reduce((s, i) => s + i.quantity, 0)}</td>
                       <td>${invoice.total.toLocaleString()}</td>
+                      <td>
+                        <span className={sriBadgeClass(invoice.sriStatus)}>
+                          {invoice.sriStatus ?? '—'}
+                        </span>
+                      </td>
                       <td className="actions">
                         <button
                           type="button"
@@ -286,7 +335,7 @@ export function BillingPage() {
                     </tr>
                     {expandedId === invoice.id && (
                       <tr className="invoice-detail-row">
-                        <td colSpan={6}>
+                        <td colSpan={7}>
                           {!invoice.finalConsumer && (
                             <p className="invoice-customer-data">
                               <strong>{invoice.customerName}</strong>
@@ -294,6 +343,28 @@ export function BillingPage() {
                               {invoice.customerEmail && <> · {invoice.customerEmail}</>}
                               {invoice.customerAddress && <> · {invoice.customerAddress}</>}
                             </p>
+                          )}
+                          {(invoice.sriAccessKey || invoice.sriAuthorizationNumber || invoice.sriErrorMessage) && (
+                            <div className="invoice-sri-meta">
+                              {invoice.sriSecuencial && <p><strong>Secuencial SRI:</strong> {invoice.sriSecuencial}</p>}
+                              {invoice.sriAccessKey && <p><strong>Clave de acceso:</strong> {invoice.sriAccessKey}</p>}
+                              {invoice.sriAuthorizationNumber && (
+                                <p><strong>Autorización:</strong> {invoice.sriAuthorizationNumber}</p>
+                              )}
+                              {invoice.sriErrorMessage && (
+                                <p className="invoice-sri-error"><strong>Error SRI:</strong> {invoice.sriErrorMessage}</p>
+                              )}
+                              {invoice.sriStatus && invoice.sriStatus !== 'AUTORIZADO' && invoice.sriStatus !== 'DISABLED' && (
+                                <button
+                                  type="button"
+                                  className="btn btn--ghost btn--sm"
+                                  disabled={refreshingId === invoice.id}
+                                  onClick={() => refreshSri(invoice.id)}
+                                >
+                                  {refreshingId === invoice.id ? 'Consultando…' : 'Actualizar estado SRI'}
+                                </button>
+                              )}
+                            </div>
                           )}
                           <table className="invoice-detail">
                             <thead>
@@ -323,7 +394,7 @@ export function BillingPage() {
                   </Fragment>
                 ))}
                 {!invoices.length && (
-                  <tr><td colSpan={6} className="muted">Aún no hay facturas. Emite la primera desde el formulario.</td></tr>
+                  <tr><td colSpan={7} className="muted">Aún no hay facturas. Emite la primera desde el formulario.</td></tr>
                 )}
               </tbody>
             </table>

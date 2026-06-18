@@ -74,6 +74,12 @@ export interface Invoice {
   createdAt: string;
   total: number;
   items: InvoiceItem[];
+  sriStatus?: string | null;
+  sriAccessKey?: string | null;
+  sriAuthorizationNumber?: string | null;
+  datilInvoiceId?: string | null;
+  sriErrorMessage?: string | null;
+  sriSecuencial?: number | null;
 }
 
 export interface InvoiceInput {
@@ -89,6 +95,16 @@ export interface SalesSummary {
   totalInvoices: number;
   itemsSold: number;
   totalRevenue: number;
+}
+
+export interface SriConfig {
+  enabled: boolean;
+  configured: boolean;
+  ambiente: number;
+  ruc: string;
+  razonSocial: string;
+  establecimientoCodigo: string;
+  puntoEmision: string;
 }
 
 interface StoredUser extends User {
@@ -423,6 +439,26 @@ export const api = {
       items,
     };
     save(INVOICES_KEY, [...load<Invoice>(INVOICES_KEY), invoice]);
+    return invoice;
+  },
+
+  async getSriConfig(): Promise<SriConfig> {
+    await delay();
+    return {
+      enabled: false,
+      configured: false,
+      ambiente: 1,
+      ruc: '',
+      razonSocial: '',
+      establecimientoCodigo: '001',
+      puntoEmision: '001',
+    };
+  },
+
+  async refreshInvoiceSri(id: number): Promise<Invoice> {
+    await delay();
+    const invoice = load<Invoice>(INVOICES_KEY).find((item) => item.id === id);
+    if (!invoice) throw new Error('Factura no encontrada');
     return invoice;
   },
 };

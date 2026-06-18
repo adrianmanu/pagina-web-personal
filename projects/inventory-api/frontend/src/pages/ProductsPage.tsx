@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Check, PackagePlus, X } from 'lucide-react';
 import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
 import { ExportMenu } from '../components/ui/ExportMenu';
-import { api, type Product } from '../api/client';
+import { api, type Product } from '../api';
 
 const emptyForm = { name: '', sku: '', stock: 0, price: 0, category: '' };
 

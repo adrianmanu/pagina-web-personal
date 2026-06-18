@@ -13,7 +13,13 @@ public record InvoiceResponse(
         String customerAddress,
         String createdAt,
         Double total,
-        List<InvoiceItemResponse> items
+        List<InvoiceItemResponse> items,
+        String sriStatus,
+        String sriAccessKey,
+        String sriAuthorizationNumber,
+        String datilInvoiceId,
+        String sriErrorMessage,
+        Integer sriSecuencial
 ) {
     public static InvoiceResponse from(Invoice invoice) {
         return new InvoiceResponse(
@@ -25,7 +31,13 @@ public record InvoiceResponse(
                 invoice.getCustomerAddress(),
                 invoice.getCreatedAt() == null ? null : invoice.getCreatedAt().toString(),
                 invoice.getTotal(),
-                invoice.getItems().stream().map(InvoiceItemResponse::from).toList()
+                invoice.getItems().stream().map(InvoiceItemResponse::from).toList(),
+                invoice.getSriStatus(),
+                invoice.getSriAccessKey(),
+                invoice.getSriAuthorizationNumber(),
+                invoice.getDatilInvoiceId(),
+                invoice.getSriErrorMessage(),
+                invoice.getSriSecuencial()
         );
     }
 }

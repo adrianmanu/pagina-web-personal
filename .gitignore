@@ -38,6 +38,7 @@ projects/inventory-api/target/
 # Env
 .env
 .env.*
+!.env.example
 
 # OS
 Thumbs.db

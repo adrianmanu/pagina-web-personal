@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { BarChart3, FlaskConical, LogOut, Package, Receipt, RotateCcw } from 'lucide-react';
-import { resetDemoData } from '../api/client';
+import { resetDemoData } from '../api';
 import { useAuth } from '../context/AuthContext';
 
 const NAV = [

@@ -37,7 +37,7 @@ Para tener presencia web clara sin invertir de más. Ideal si necesitas que tus 
 | Al iniciar (50%) | **$115** |
 | Al entregar (50%) | **$115** |
 
-**Plazo:** 12–18 días hábiles
+**Plazo:** 6–10 días hábiles
 
 ### Secciones incluidas
 
@@ -78,7 +78,7 @@ Para un restaurante que quiere mostrar más su marca: historia, fotos, promocion
 | Al iniciar (50%) | **$160** |
 | Al entregar (50%) | **$160** |
 
-**Plazo:** 18–25 días hábiles
+**Plazo:** 10–15 días hábiles
 
 ### Secciones incluidas
 
@@ -130,11 +130,9 @@ Para un restaurante que quiere mostrar más su marca: historia, fotos, promocion
 | Extra | Precio |
 |-------|--------|
 | Ampliar Esencial → Profesional | ~$90 + secciones nuevas |
-| Menú en PDF descargable | desde $40 |
-| Reserva con calendario / cupos | desde $80 |
-| Correo profesional (`reservas@restaurante.com`) | desde $6/mes |
-| Sesión fotográfica del local y platos | A convenir |
-| Community manager / pauta en redes | No incluido |
+| Menú en PDF descargable | desde $30 |
+| Reserva con calendario / cupos | desde $50 |
+
 
 > **Redes sociales:** la web incluye **enlaces** a tus perfiles (Instagram, Facebook, etc.). No incluye publicar contenido, diseñar posts ni manejar pauta — eso es un servicio aparte.
 

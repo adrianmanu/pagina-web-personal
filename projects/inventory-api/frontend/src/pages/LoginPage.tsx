@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2, Mail, Sparkles } from 'lucide-react';
-import { DEMO_EMAIL, DEMO_PASSWORD } from '../api/client';
+import { DEMO_EMAIL, DEMO_PASSWORD } from '../api';
 import { AuthLayout } from '../components/auth/AuthLayout';
 import { FormField } from '../components/ui/FormField';
 import { PasswordField } from '../components/ui/PasswordField';
