@@ -9,61 +9,47 @@
 <body>
   <div class="container">
     <a class="back" href="#">← Volver al portafolio</a>
-    <span class="badge">Spring Boot · React · JWT · Inventario · Facturación</span>
-    <h1>API de Inventario Empresarial</h1>
+    <span class="badge">Spring Boot · React · SRI Ecuador · Inventario</span>
+    <h1>StockFlow — Inventario y facturación SRI</h1>
     <p class="subtitle">
-      Plataforma full stack para control de stock, facturación con descuento automático
-      y dashboard con KPIs de inventario y ventas.
+      Plataforma SaaS para control de stock, facturación electrónica con el SRI (Factuplan)
+      y membresías con PayPhone. Esta demo funciona en el navegador sin instalar nada.
     </p>
 
     <div class="card">
       <h2>¿Qué hace este sistema?</h2>
       <p>
-        <strong>StockFlow</strong> simula un entorno empresarial de inventario: gestiona productos,
-        emite facturas que descuentan stock en tiempo real y presenta indicadores clave en un
-        dashboard. La demo interactiva funciona en el navegador; el backend Spring Boot completo
-        está disponible en el repositorio para despliegue local.
+        <strong>StockFlow</strong> gestiona inventario, clientes, proveedores y emite comprobantes
+        electrónicos (facturas, notas de crédito/débito, guías, retenciones, ATS). La demo del
+        portafolio simula el flujo completo en tu navegador. El backend Spring Boot real se
+        despliega en un servidor para pruebas con Factuplan y PayPhone.
       </p>
     </div>
 
     <div class="card">
-      <h2>Qué puedes hacer en la demo</h2>
+      <h2>Qué puedes probar en la demo</h2>
       <ul class="feature-list">
-        <li>Iniciar sesión con cuenta demo o registrarte</li>
-        <li>Ver KPIs de inventario, stock bajo y ventas recientes</li>
-        <li>Crear, editar y eliminar productos con control de stock</li>
-        <li>Reponer stock rápidamente desde la lista de productos</li>
-        <li>Generar facturas con múltiples ítems y descuento automático de stock</li>
-        <li>Exportar inventario, facturas y resumen del dashboard en PDF o Excel</li>
+        <li>Entrar con un clic — cuenta demo precargada</li>
+        <li>Dashboard con KPIs, stock bajo y ventas recientes</li>
+        <li>Productos, clientes, proformas y facturación con descuento de stock</li>
+        <li>Facturas con estado SRI simulado (AUTORIZADO)</li>
+        <li>Notas de crédito/débito, guías, retenciones, liquidaciones, ATS</li>
+        <li>Configuración SRI y membresía (simuladas en demo)</li>
+        <li>Exportar inventario y facturas en PDF o Excel</li>
       </ul>
       <div class="tech">
-        <span>React</span><span>JWT</span><span>Facturación</span><span>localStorage</span>
+        <span>React</span><span>Spring Boot</span><span>Factuplan</span><span>PayPhone</span><span>JWT</span>
       </div>
     </div>
 
     <div class="card">
-      <h2>Guía rápida de uso</h2>
+      <h2>Guía rápida</h2>
       <ol class="steps">
-        <li>
-          <strong>Accede al sistema</strong>
-          Usa «Entrar con demo» o las credenciales de abajo.
-        </li>
-        <li>
-          <strong>Explora el dashboard</strong>
-          Revisa productos activos, stock crítico y ventas del periodo.
-        </li>
-        <li>
-          <strong>Gestiona productos</strong>
-          Añade productos, ajusta precios y repone unidades cuando el stock sea bajo.
-        </li>
-        <li>
-          <strong>Emite una factura</strong>
-          Selecciona productos, confirma la venta y verifica que el stock se descuenta.
-        </li>
-        <li>
-          <strong>Exporta reportes</strong>
-          Desde Dashboard, Productos o Facturación, usa el menú «Exportar».
-        </li>
+        <li><strong>Entra con demo</strong> — botón en el login o credenciales abajo.</li>
+        <li><strong>Dashboard</strong> — revisa KPIs y ventas de ejemplo.</li>
+        <li><strong>Facturación</strong> — emite una venta y verifica el descuento de stock.</li>
+        <li><strong>Documentos</strong> — explora notas, guías y retenciones.</li>
+        <li><strong>Restablecer</strong> — banner verde arriba para volver a datos iniciales.</li>
       </ol>
     </div>
 
@@ -71,8 +57,17 @@
       <h2>Credenciales de demo</h2>
       <div class="note">
         Correo: <code>demo@stockflow.dev</code> · Contraseña: <code>demo1234</code><br />
-        Los datos persisten en tu navegador durante la sesión de prueba.
+        Los datos se guardan en tu navegador. No se conecta a servidores ni al SRI real.
       </div>
+    </div>
+
+    <div class="card">
+      <h2>Modo servidor (pruebas reales)</h2>
+      <p>
+        Para probar Factuplan (<code>ak_test_</code>), PayPhone y emisión SRI real, despliega el
+        backend y compila el frontend en modo live. Guía:
+        <code>projects/inventory-api/SETUP-PRODUCCION.md</code> en el repositorio.
+      </p>
     </div>
 
     <div class="cta">

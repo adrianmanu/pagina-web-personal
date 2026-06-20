@@ -84,7 +84,34 @@ DATIL_AMBIENTE=1
 
 ---
 
-## Parte 3 — Levantar StockFlow en tu PC
+## Compartir con otra persona (túnel / VS Code Ports)
+
+### Opción recomendada: Cursor o VS Code → Ports (dev tunnels)
+
+1. Levanta **backend** (8080) y **frontend** (5176) en tu PC.
+2. En Cursor/VS Code abre el panel **Ports** / **Puertos** (abajo).
+3. Clic **Forward a Port** → escribe `5176`.
+4. Inicia sesión con GitHub si te lo pide (Microsoft dev tunnels).
+5. Clic derecho en el puerto `5176` → **Port Visibility** → **Public**.
+6. Copia la URL que termina en **`.devtunnels.ms`** y envíala.
+
+Solo reenvía el **5176** (el frontend). Vite redirige `/api` al backend local en 8080.
+
+### Cloudflare / localtunnel (alternativa)
+
+```powershell
+npx cloudflared tunnel --url http://localhost:5176
+```
+
+El `vite.config.ts` ya permite hosts `.trycloudflare.com` y `.loca.lt`.
+
+### CORS
+
+Si alguien abre la app por túnel y falla el login/API, reinicia el backend tras actualizar el código:
+el backend acepta orígenes `*.devtunnels.ms`, `*.trycloudflare.com` y `*.loca.lt`.
+
+---
+
 
 ### Requisitos
 

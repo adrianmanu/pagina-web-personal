@@ -1,6 +1,7 @@
 package com.adrian.inventory.security;
 
 import com.adrian.inventory.model.User;
+import com.adrian.inventory.model.UserRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,7 +21,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public List<SimpleGrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        UserRole role = user.getRole() == null ? UserRole.ADMIN : user.getRole();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    public UserRole getRole() {
+        return user.getRole() == null ? UserRole.ADMIN : user.getRole();
     }
 
     @Override

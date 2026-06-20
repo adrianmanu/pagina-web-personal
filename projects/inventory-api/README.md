@@ -2,7 +2,7 @@
 
 Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 
-> **Demo en línea:** la versión publicada en GitHub Pages funciona en *modo demo* (datos de ejemplo guardados en el navegador, sin servidor). Este repositorio contiene la API REST completa en Spring Boot, que puede ejecutarse localmente siguiendo los pasos de abajo.
+> **Demo en línea:** la versión en GitHub Pages funciona en *modo demo* (datos en el navegador, sin servidor). Para pruebas SRI reales con Factuplan y PayPhone, ver [SETUP-PRODUCCION.md](./SETUP-PRODUCCION.md).
 
 ## Stack
 
@@ -20,6 +20,9 @@ Plataforma full stack con **login, registro, dashboard y CRUD** de productos.
 - CRUD de productos (nombre, SKU, stock, precio, categoría)
 - **Facturación**: emisión de facturas con descuento automático de stock
 - **Facturación electrónica SRI** (opcional): integración con [Datil](https://datil.dev) para comprobantes autorizados
+- **Roadmap facturación completa** (notas de crédito, retenciones, ATS, etc.): [ROADMAP-FACTURACION.md](./ROADMAP-FACTURACION.md)
+- **Fase 1 (base SRI):** número de comprobante `001-002-XXXXXX`, RIDE/PDF, reemisión, secuenciales por tipo
+- **Fase 2 (clientes):** catálogo CRUD, búsqueda al facturar, historial por cliente
 - Facturas a **consumidor final** o con **datos completos** (nombre, cédula/RUC, correo, dirección)
 - Validación de stock insuficiente al vender
 - Reposición rápida de stock sin editar el producto

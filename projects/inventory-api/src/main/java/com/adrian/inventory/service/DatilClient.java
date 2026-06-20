@@ -23,11 +23,50 @@ public class DatilClient {
         this.objectMapper = objectMapper;
     }
 
-    public JsonNode issueInvoice(JsonNode payload, String idempotencyKey) {
+    public JsonNode issue(SriDocumentType type, JsonNode payload, String idempotencyKey) {
+        ensureConfigured();
+        return post("/" + type.getApiResource() + "/issue", payload, idempotencyKey);
+    }
+
+    public JsonNode get(SriDocumentType type, String datilId) {
         ensureConfigured();
         try {
+            return restClient.get()
+                    .uri("/{resource}/{id}", type.getApiResource(), datilId)
+                    .header("X-Key", properties.getApiKey())
+                    .retrieve()
+                    .body(JsonNode.class);
+        } catch (RestClientResponseException ex) {
+            String detail = extractError(ex.getResponseBodyAsString());
+            throw new ApiException(
+                    HttpStatus.BAD_GATEWAY,
+                    "No se pudo consultar el comprobante en Datil: " + detail);
+        } catch (Exception ex) {
+            throw new ApiException(HttpStatus.BAD_GATEWAY, "Error consultando Datil: " + ex.getMessage());
+        }
+    }
+
+    public JsonNode reissue(SriDocumentType type, String datilId, JsonNode payload) {
+        ensureConfigured();
+        return post("/" + type.getApiResource() + "/" + datilId + "/reissue", payload, "reissue-" + datilId);
+    }
+
+    public JsonNode issueInvoice(JsonNode payload, String idempotencyKey) {
+        return issue(SriDocumentType.INVOICE, payload, idempotencyKey);
+    }
+
+    public JsonNode getInvoice(String datilInvoiceId) {
+        return get(SriDocumentType.INVOICE, datilInvoiceId);
+    }
+
+    public JsonNode reissueInvoice(String datilInvoiceId, JsonNode payload) {
+        return reissue(SriDocumentType.INVOICE, datilInvoiceId, payload);
+    }
+
+    private JsonNode post(String uri, JsonNode payload, String idempotencyKey) {
+        try {
             return restClient.post()
-                    .uri("/invoices/issue")
+                    .uri(uri)
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("X-Key", properties.getApiKey())
                     .header("X-Password", properties.getCertificatePassword())
@@ -40,22 +79,6 @@ public class DatilClient {
             throw new ApiException(HttpStatus.BAD_GATEWAY, "Datil rechazó la emisión: " + detail);
         } catch (Exception ex) {
             throw new ApiException(HttpStatus.BAD_GATEWAY, "No se pudo conectar con Datil: " + ex.getMessage());
-        }
-    }
-
-    public JsonNode getInvoice(String datilInvoiceId) {
-        ensureConfigured();
-        try {
-            return restClient.get()
-                    .uri("/invoices/{id}", datilInvoiceId)
-                    .header("X-Key", properties.getApiKey())
-                    .retrieve()
-                    .body(JsonNode.class);
-        } catch (RestClientResponseException ex) {
-            String detail = extractError(ex.getResponseBodyAsString());
-            throw new ApiException(HttpStatus.BAD_GATEWAY, "No se pudo consultar la factura en Datil: " + detail);
-        } catch (Exception ex) {
-            throw new ApiException(HttpStatus.BAD_GATEWAY, "Error consultando Datil: " + ex.getMessage());
         }
     }
 
@@ -73,6 +96,39 @@ public class DatilClient {
         }
         try {
             JsonNode node = objectMapper.readTree(body);
+            if (node.has("parameter")) {
+                String parameter = node.get("parameter").asText();
+                String details = node.has("details") ? node.get("details").asText() : node.path("message").asText();
+                return parameter + ": " + details;
+            }
+            if (node.has("errors") && node.get("errors").isArray() && !node.get("errors").isEmpty()) {
+                StringBuilder details = new StringBuilder();
+                for (JsonNode error : node.get("errors")) {
+                    if (!details.isEmpty()) {
+                        details.append("; ");
+                    }
+                    if (error.has("path")) {
+                        details.append(error.get("path").asText()).append(": ");
+                    } else if (error.has("parameter")) {
+                        details.append(error.get("parameter").asText()).append(": ");
+                    } else if (error.has("campo")) {
+                        details.append(error.get("campo").asText()).append(": ");
+                    }
+                    if (error.has("details")) {
+                        details.append(error.get("details").asText());
+                    } else if (error.has("mensaje")) {
+                        details.append(error.get("mensaje").asText());
+                    } else if (error.has("message")) {
+                        details.append(error.get("message").asText());
+                    }
+                }
+                if (!details.isEmpty()) {
+                    return details.toString();
+                }
+                JsonNode first = node.get("errors").get(0);
+                if (first.has("details")) return first.get("details").asText();
+                if (first.has("mensaje")) return first.get("mensaje").asText();
+            }
             if (node.has("mensaje")) return node.get("mensaje").asText();
             if (node.has("message")) return node.get("message").asText();
             if (node.has("error")) return node.get("error").asText();

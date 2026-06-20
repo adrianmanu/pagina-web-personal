@@ -18,6 +18,10 @@ public class Invoice {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Column(nullable = false)
     private boolean finalConsumer;
 
@@ -34,11 +38,21 @@ public class Invoice {
     private Double total;
 
     private String sriStatus;
+    @Column(length = 49)
     private String sriAccessKey;
+    @Column(length = 64)
     private String sriAuthorizationNumber;
+    @Column(length = 64)
     private String datilInvoiceId;
+    @Column(length = 1000)
     private String sriErrorMessage;
     private Integer sriSecuencial;
+    @Column(length = 17)
+    private String sriDocumentNumber;
+    @Column(length = 512)
+    private String sriRidePdfUrl;
+    @Column(length = 512)
+    private String sriXmlUrl;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceItem> items = new ArrayList<>();
@@ -49,6 +63,8 @@ public class Invoice {
     public void setId(Long id) { this.id = id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
     public boolean isFinalConsumer() { return finalConsumer; }
     public void setFinalConsumer(boolean finalConsumer) { this.finalConsumer = finalConsumer; }
     public String getCustomerName() { return customerName; }
@@ -75,6 +91,12 @@ public class Invoice {
     public void setSriErrorMessage(String sriErrorMessage) { this.sriErrorMessage = sriErrorMessage; }
     public Integer getSriSecuencial() { return sriSecuencial; }
     public void setSriSecuencial(Integer sriSecuencial) { this.sriSecuencial = sriSecuencial; }
+    public String getSriDocumentNumber() { return sriDocumentNumber; }
+    public void setSriDocumentNumber(String sriDocumentNumber) { this.sriDocumentNumber = sriDocumentNumber; }
+    public String getSriRidePdfUrl() { return sriRidePdfUrl; }
+    public void setSriRidePdfUrl(String sriRidePdfUrl) { this.sriRidePdfUrl = sriRidePdfUrl; }
+    public String getSriXmlUrl() { return sriXmlUrl; }
+    public void setSriXmlUrl(String sriXmlUrl) { this.sriXmlUrl = sriXmlUrl; }
     public List<InvoiceItem> getItems() { return items; }
     public void setItems(List<InvoiceItem> items) { this.items = items; }
 }

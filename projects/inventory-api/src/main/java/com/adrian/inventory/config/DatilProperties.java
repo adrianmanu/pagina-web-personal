@@ -23,6 +23,9 @@ public class DatilProperties {
     private String ivaCodigoPorcentaje = "4";
     private boolean pricesIncludeIva = true;
     private int secuencialInicial = 0;
+    private boolean agenteRetencion = false;
+    private String agenteRetencionResolucion = "";
+    private int emissionOffsetDays = 0;
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
@@ -60,6 +63,14 @@ public class DatilProperties {
     public void setPricesIncludeIva(boolean pricesIncludeIva) { this.pricesIncludeIva = pricesIncludeIva; }
     public int getSecuencialInicial() { return secuencialInicial; }
     public void setSecuencialInicial(int secuencialInicial) { this.secuencialInicial = secuencialInicial; }
+    public boolean isAgenteRetencion() { return agenteRetencion; }
+    public void setAgenteRetencion(boolean agenteRetencion) { this.agenteRetencion = agenteRetencion; }
+    public String getAgenteRetencionResolucion() { return agenteRetencionResolucion; }
+    public void setAgenteRetencionResolucion(String agenteRetencionResolucion) {
+        this.agenteRetencionResolucion = agenteRetencionResolucion;
+    }
+    public int getEmissionOffsetDays() { return emissionOffsetDays; }
+    public void setEmissionOffsetDays(int emissionOffsetDays) { this.emissionOffsetDays = emissionOffsetDays; }
 
     public boolean isConfigured() {
         return enabled

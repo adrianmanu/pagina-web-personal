@@ -2,9 +2,18 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Check, PackagePlus, X } from 'lucide-react';
 import { downloadExcel, downloadPdf, type ExportColumn } from '../utils/exportReports';
 import { ExportMenu } from '../components/ui/ExportMenu';
+import { FormAlerts } from '../components/ui/FormAlerts';
+import { PanelField } from '../components/ui/PanelField';
 import { api, type Product } from '../api';
+import {
+  type FieldErrors,
+  hasFieldErrors,
+  validatePositiveAmount,
+  validateRequired,
+} from '../utils/validation';
 
 const emptyForm = { name: '', sku: '', stock: 0, price: 0, category: '' };
+type ProductField = keyof typeof emptyForm;
 
 const STOCKFLOW_THEME = { accentRgb: [244, 63, 94] as [number, number, number] };
 
@@ -21,26 +30,59 @@ export function ProductsPage() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors<ProductField>>({});
+  const [saving, setSaving] = useState(false);
   const [stockId, setStockId] = useState<number | null>(null);
   const [stockQty, setStockQty] = useState(1);
 
   const load = () => api.getProducts().then(setItems);
   useEffect(() => { load(); }, []);
 
+  const updateField = (field: ProductField, value: string | number) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    setError('');
+  };
+
+  const validateForm = () => {
+    const errors: FieldErrors<ProductField> = {
+      name: validateRequired(form.name, 'El nombre'),
+      sku: validateRequired(form.sku, 'El SKU'),
+      category: validateRequired(form.category, 'La categoría'),
+      stock: form.stock < 0 ? 'El stock no puede ser negativo' : undefined,
+      price: validatePositiveAmount(form.price, 'El precio'),
+    };
+    const filtered = Object.fromEntries(
+      Object.entries(errors).filter(([, value]) => value),
+    ) as FieldErrors<ProductField>;
+    setFieldErrors(filtered);
+    return !hasFieldErrors(filtered);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
+    if (!validateForm()) return;
+
+    setSaving(true);
     try {
       if (editingId) {
         await api.updateProduct(editingId, form);
+        setSuccess('Producto actualizado.');
       } else {
         await api.createProduct(form);
+        setSuccess('Producto creado.');
       }
       setForm(emptyForm);
       setEditingId(null);
+      setFieldErrors({});
       load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar el producto');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -53,20 +95,34 @@ export function ProductsPage() {
       price: item.price,
       category: item.category,
     });
+    setFieldErrors({});
+    setError('');
+    setSuccess('');
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('¿Eliminar este producto?')) return;
-    await api.deleteProduct(id);
-    load();
+    setError('');
+    try {
+      await api.deleteProduct(id);
+      load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo eliminar el producto');
+    }
   };
 
   const handleAddStock = async (id: number) => {
+    const qtyError = validatePositiveAmount(stockQty, 'La cantidad');
+    if (qtyError) {
+      setError(qtyError);
+      return;
+    }
     setError('');
     try {
       await api.addStock(id, stockQty);
       setStockId(null);
       setStockQty(1);
+      setSuccess('Stock actualizado.');
       load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo actualizar el stock');
@@ -100,18 +156,67 @@ export function ProductsPage() {
       </header>
 
       <div className="split">
-        <form className="panel form-panel" onSubmit={handleSubmit}>
+        <form className="panel form-panel" onSubmit={handleSubmit} noValidate>
           <h2>{editingId ? 'Editar producto' : 'Nuevo producto'}</h2>
-          {error && <div className="alert alert--error" role="alert">{error}</div>}
-          <label>Nombre<input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></label>
-          <label>SKU<input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} required /></label>
-          <label>Stock<input type="number" min={0} value={form.stock} onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })} required /></label>
-          <label>Precio<input type="number" min={0} step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} required /></label>
-          <label>Categoría<input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required /></label>
+          <FormAlerts error={error} success={success} />
+
+          <PanelField
+            label="Nombre"
+            value={form.name}
+            onChange={(e) => updateField('name', e.target.value)}
+            error={fieldErrors.name}
+            required
+          />
+          <PanelField
+            label="SKU"
+            value={form.sku}
+            onChange={(e) => updateField('sku', e.target.value)}
+            error={fieldErrors.sku}
+            hint="Código único de inventario"
+            required
+          />
+          <PanelField
+            label="Stock"
+            type="number"
+            min={0}
+            value={form.stock}
+            onChange={(e) => updateField('stock', Number(e.target.value))}
+            error={fieldErrors.stock}
+            required
+          />
+          <PanelField
+            label="Precio"
+            type="number"
+            min={0}
+            step={0.01}
+            value={form.price}
+            onChange={(e) => updateField('price', Number(e.target.value))}
+            error={fieldErrors.price}
+            required
+          />
+          <PanelField
+            label="Categoría"
+            value={form.category}
+            onChange={(e) => updateField('category', e.target.value)}
+            error={fieldErrors.category}
+            placeholder="Ej. Bebidas, Lácteos"
+            required
+          />
           <div className="form-actions">
-            <button type="submit" className="btn btn--primary">{editingId ? 'Actualizar' : 'Crear'}</button>
+            <button type="submit" className="btn btn--primary" disabled={saving}>
+              {saving ? 'Guardando…' : editingId ? 'Actualizar' : 'Crear'}
+            </button>
             {editingId && (
-              <button type="button" className="btn btn--ghost" onClick={() => { setEditingId(null); setForm(emptyForm); setError(''); }}>
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => {
+                  setEditingId(null);
+                  setForm(emptyForm);
+                  setFieldErrors({});
+                  setError('');
+                }}
+              >
                 Cancelar
               </button>
             )}
@@ -128,15 +233,15 @@ export function ProductsPage() {
               <tbody>
                 {items.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.sku}</td>
-                    <td>
+                    <td data-label="Producto">{item.name}</td>
+                    <td data-label="SKU">{item.sku}</td>
+                    <td data-label="Stock">
                       <span className={`badge ${item.stock === 0 ? 'badge--failed' : item.stock < 5 ? 'badge--running' : 'badge--ok'}`}>
                         {item.stock}
                       </span>
                     </td>
-                    <td>${item.price.toLocaleString()}</td>
-                    <td>{item.category}</td>
+                    <td data-label="Precio">${item.price.toLocaleString()}</td>
+                    <td data-label="Categoría">{item.category}</td>
                     <td className="actions">
                       {stockId === item.id ? (
                         <span className="stock-inline">

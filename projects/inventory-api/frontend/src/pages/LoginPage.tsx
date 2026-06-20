@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2, Mail, Sparkles } from 'lucide-react';
 import { DEMO_EMAIL, DEMO_PASSWORD } from '../api';
 import { AuthLayout } from '../components/auth/AuthLayout';
+import { FormAlerts } from '../components/ui/FormAlerts';
 import { FormField } from '../components/ui/FormField';
 import { PasswordField } from '../components/ui/PasswordField';
 import { useAuth } from '../context/AuthContext';
+import { validateEmail, validateRequired } from '../utils/validation';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -15,6 +17,7 @@ export function LoginPage() {
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState<string | undefined>();
 
   useEffect(() => {
     const saved = localStorage.getItem('remembered_email_inventory');
@@ -37,6 +40,14 @@ export function LoginPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    const emailValidation = validateEmail(email, true);
+    const passwordValidation = validateRequired(password, 'La contraseña');
+    setEmailError(emailValidation);
+    if (emailValidation || passwordValidation) {
+      if (passwordValidation) setError(passwordValidation);
+      return;
+    }
+
     setLoading(true);
     try {
       await login(email, password);
@@ -63,7 +74,7 @@ export function LoginPage() {
       }
     >
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
-        {error && <div className="alert alert--error" role="alert">{error}</div>}
+        <FormAlerts error={error} />
 
         <FormField
           label="Correo electrónico"
@@ -71,7 +82,11 @@ export function LoginPage() {
           type="email"
           placeholder="tu@empresa.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailError(undefined);
+          }}
+          error={emailError}
           icon={<Mail size={18} />}
           autoComplete="email"
           required

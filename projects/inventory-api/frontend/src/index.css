@@ -502,18 +502,24 @@ input, textarea, select, button { font: inherit; }
 .demo-banner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
   padding: 10px 16px;
   margin-bottom: 24px;
-  background: rgba(244, 63, 94, 0.07);
-  border: 1px solid rgba(244, 63, 94, 0.22);
+  background: rgba(96, 165, 250, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.25);
   border-radius: 12px;
-  color: #fecdd3;
+  color: #bfdbfe;
   font-size: 0.84rem;
   line-height: 1.45;
 }
 .demo-banner svg { flex-shrink: 0; color: var(--accent); }
 .demo-banner span { flex: 1; }
+.demo-banner--portfolio {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.28);
+  color: #a7f3d0;
+}
 .demo-banner button {
   display: inline-flex;
   align-items: center;
@@ -745,6 +751,58 @@ input, textarea, select, button { font: inherit; }
   margin-bottom: 12px;
 }
 
+/* Panel fields (Fase 11) */
+.panel-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.panel-field__label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.panel-field__control,
+.form-panel .panel-field__control {
+  min-height: 48px;
+  background: #1e293b;
+  border: 2px solid #475569;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #f8fafc;
+  font-weight: 500;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.panel-field__control:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #243044;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+}
+textarea.panel-field__control {
+  min-height: 120px;
+  resize: vertical;
+  padding-top: 12px;
+}
+.panel-field--error .panel-field__control,
+.panel-field__control--error {
+  border-color: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.12);
+}
+.panel-field__hint {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: -4px;
+}
+.panel-field__error {
+  font-size: 0.8rem;
+  color: #fca5a5;
+  font-weight: 500;
+  margin-top: -4px;
+}
+
 /* ─── FACTURACIÓN ─── */
 .segmented {
   display: flex;
@@ -910,6 +968,93 @@ tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
 }
 .invoice-sri-meta p { margin: 0 0 6px; }
 .invoice-sri-error { color: #fca5a5; }
+.invoice-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.invoice-detail-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.invoice-detail-sri-number {
+  margin-left: 10px;
+  font-family: var(--mono);
+  font-size: 0.9em;
+  color: #fda4af;
+}
+.invoice-sri-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.invoice-access-key {
+  word-break: break-all;
+}
+.mono {
+  font-family: var(--mono);
+  font-size: 0.85em;
+}
+.customer-name-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.customer-picker {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+.customer-picker__hint {
+  font-size: 0.85rem;
+}
+.customer-picker__results {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-2);
+  max-height: 180px;
+  overflow-y: auto;
+}
+.customer-picker__results li + li {
+  margin-top: 4px;
+}
+.customer-picker__results button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+.customer-picker__results button:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+.credit-note-form {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.credit-note-form h3 {
+  margin: 0 0 12px;
+}
 .alert--warning {
   background: rgba(245, 158, 11, 0.12);
   border: 1px solid rgba(245, 158, 11, 0.25);
@@ -956,7 +1101,119 @@ tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
   font-size: 1rem;
 }
 
-@media (max-width: 1024px) {
+/* Membresía */
+.membership-page .membership-plans-title {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+}
+
+.membership-plans {
+  align-items: stretch;
+}
+
+.membership-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.membership-plan--featured {
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2);
+}
+
+.membership-plan__badge {
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+.membership-plan__name {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.membership-plan__tagline {
+  margin: 0;
+  min-height: 2.6em;
+}
+
+.membership-plan__price {
+  margin: 8px 0 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.membership-plan__interval {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.membership-plan__billing {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.membership-plan__includes {
+  margin: 12px 0 4px;
+  font-size: 0.92rem;
+}
+
+.membership-benefits {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  flex: 1;
+}
+
+.membership-benefits li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 6px 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.membership-benefits__check {
+  flex-shrink: 0;
+  color: #34d399;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.membership-trial__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.membership-trial__header h2 {
+  margin: 0;
+}
+
+.membership-billing-note h2 {
+  margin-top: 0;
+}
+
+.membership-compare p {
+  margin: 0 0 10px;
+}
+
+.membership-compare p:last-child {
+  margin-bottom: 0;
+}
+
+.btn--full {
+  width: 100%;
+  margin-top: auto;
+}
+
+@media (max-width: 960px) {
   .auth-shell { grid-template-columns: 1fr; }
   .auth-showcase { display: none; }
   .auth-form-side { padding: 32px 20px; min-height: 100vh; }
@@ -965,10 +1222,70 @@ tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
   .auth-form-header h1 { font-size: 1.9rem; }
 }
 
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+.form-row .panel-field {
+  flex: 1;
+  min-width: 140px;
+}
+
 @media (max-width: 960px) {
   .app-shell { grid-template-columns: 1fr; }
   .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
   .split { grid-template-columns: 1fr; }
-  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
   .main { padding: 24px 20px; }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .form-row {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .main { padding: 20px 14px; }
+  .panel { padding: 18px 16px; }
+  .table-wrap table:not(.invoice-detail) thead { display: none; }
+  .table-wrap table:not(.invoice-detail) tbody tr {
+    display: block;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-wrap table:not(.invoice-detail) tbody td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 12px;
+    border: none;
+    text-align: right;
+  }
+  .table-wrap table:not(.invoice-detail) tbody td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--muted);
+    text-align: left;
+  }
+  .table-wrap table:not(.invoice-detail) tbody td.actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .segmented {
+    flex-direction: column;
+  }
+  .segmented button {
+    width: 100%;
+  }
 }

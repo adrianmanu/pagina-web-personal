@@ -1,6 +1,8 @@
 package com.adrian.inventory.config;
 
 import com.adrian.inventory.security.JwtAuthFilter;
+import com.adrian.inventory.security.MembershipEnforcementFilter;
+import com.adrian.inventory.security.RoleAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,9 +27,16 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final RoleAuthorizationFilter roleAuthorizationFilter;
+    private final MembershipEnforcementFilter membershipEnforcementFilter;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(
+            JwtAuthFilter jwtAuthFilter,
+            RoleAuthorizationFilter roleAuthorizationFilter,
+            MembershipEnforcementFilter membershipEnforcementFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.roleAuthorizationFilter = roleAuthorizationFilter;
+        this.membershipEnforcementFilter = membershipEnforcementFilter;
     }
 
     @Bean
@@ -37,12 +46,14 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/health", "/api/auth/**").permitAll()
+                        .requestMatchers("/health", "/api/auth/**", "/api/webhooks/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(membershipEnforcementFilter, JwtAuthFilter.class)
+                .addFilterAfter(roleAuthorizationFilter, MembershipEnforcementFilter.class);
 
         return http.build();
     }
@@ -52,7 +63,11 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
-                "https://adrianmanu.github.io"
+                "https://adrianmanu.github.io",
+                "https://adrian-ramos.pages.dev",
+                "https://*.trycloudflare.com",
+                "https://*.devtunnels.ms",
+                "https://*.loca.lt"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));

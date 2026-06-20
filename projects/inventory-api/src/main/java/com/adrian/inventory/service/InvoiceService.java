@@ -6,6 +6,7 @@ import com.adrian.inventory.dto.InvoiceRequest;
 import com.adrian.inventory.dto.InvoiceResponse;
 import com.adrian.inventory.dto.SalesSummary;
 import com.adrian.inventory.exception.ApiException;
+import com.adrian.inventory.model.Customer;
 import com.adrian.inventory.model.Invoice;
 import com.adrian.inventory.model.InvoiceItem;
 import com.adrian.inventory.model.Product;
@@ -25,14 +26,20 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ProductRepository productRepository;
     private final SriBillingService sriBillingService;
+    private final CustomerService customerService;
+    private final InvoiceNotificationService invoiceNotificationService;
 
     public InvoiceService(
             InvoiceRepository invoiceRepository,
             ProductRepository productRepository,
-            SriBillingService sriBillingService) {
+            SriBillingService sriBillingService,
+            CustomerService customerService,
+            InvoiceNotificationService invoiceNotificationService) {
         this.invoiceRepository = invoiceRepository;
         this.productRepository = productRepository;
         this.sriBillingService = sriBillingService;
+        this.customerService = customerService;
+        this.invoiceNotificationService = invoiceNotificationService;
     }
 
     @Transactional
@@ -45,17 +52,7 @@ public class InvoiceService {
             invoice.setFinalConsumer(true);
             invoice.setCustomerName("Consumidor Final");
         } else {
-            if (request.customerName() == null || request.customerName().isBlank()) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, "El nombre del cliente es obligatorio");
-            }
-            if (request.customerTaxId() == null || request.customerTaxId().isBlank()) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, "La cédula o RUC del cliente es obligatoria");
-            }
-            invoice.setFinalConsumer(false);
-            invoice.setCustomerName(request.customerName().trim());
-            invoice.setCustomerTaxId(request.customerTaxId().trim());
-            invoice.setCustomerEmail(blankToNull(request.customerEmail()));
-            invoice.setCustomerAddress(blankToNull(request.customerAddress()));
+            applyCustomerData(invoice, request, user);
         }
 
         double total = 0;
@@ -92,19 +89,16 @@ public class InvoiceService {
         Invoice saved = invoiceRepository.save(invoice);
 
         if (sriBillingService.isEnabled()) {
-            try {
-                sriBillingService.emitInvoice(saved);
-            } catch (Exception ex) {
-                saved.setSriStatus("ERROR");
-                saved.setSriErrorMessage(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName());
-            }
+            sriBillingService.emitInvoice(saved);
             saved = invoiceRepository.save(saved);
         } else {
             saved.setSriStatus("DISABLED");
             saved = invoiceRepository.save(saved);
         }
 
-        return InvoiceResponse.from(saved);
+        InvoiceResponse response = InvoiceResponse.from(saved);
+        invoiceNotificationService.notifyInvoice(response);
+        return response;
     }
 
     public List<InvoiceResponse> findAll(User user) {
@@ -136,6 +130,31 @@ public class InvoiceService {
         return InvoiceResponse.from(invoiceRepository.save(invoice));
     }
 
+    @Transactional
+    public InvoiceResponse reissueSri(Long id, User user) {
+        Invoice invoice = invoiceRepository
+                .findById(id)
+                .filter(item -> item.getUser().getId().equals(user.getId()))
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
+
+        if (!sriBillingService.isEnabled()) {
+            throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "Facturación SRI no está configurada");
+        }
+
+        try {
+            sriBillingService.reissueInvoice(invoice);
+        } catch (Exception ex) {
+            invoice.setSriStatus("ERROR");
+            invoice.setSriErrorMessage(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName());
+            invoiceRepository.save(invoice);
+            throw ex instanceof ApiException apiEx
+                    ? apiEx
+                    : new ApiException(HttpStatus.BAD_GATEWAY, ex.getMessage());
+        }
+
+        return InvoiceResponse.from(invoiceRepository.save(invoice));
+    }
+
     public SalesSummary getSummary(User user) {
         List<Invoice> invoices = invoiceRepository.findByUserIdOrderByIdDesc(user.getId());
 
@@ -148,6 +167,33 @@ public class InvoiceService {
                 .sum();
 
         return new SalesSummary(invoices.size(), itemsSold, Math.round(revenue * 100.0) / 100.0);
+    }
+
+    private void applyCustomerData(Invoice invoice, InvoiceRequest request, User user) {
+        if (request.customerId() != null) {
+            Customer customer = customerService.getOwnedCustomer(request.customerId(), user);
+            invoice.setCustomer(customer);
+            invoice.setFinalConsumer(false);
+            invoice.setCustomerName(customer.getName());
+            invoice.setCustomerTaxId(customer.getTaxId());
+            invoice.setCustomerEmail(customer.getEmail());
+            invoice.setCustomerAddress(customer.getAddress());
+            return;
+        }
+
+        if (request.customerName() == null || request.customerName().isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El nombre del cliente es obligatorio");
+        }
+        if (request.customerTaxId() == null || request.customerTaxId().isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "La cédula o RUC del cliente es obligatoria");
+        }
+
+        TaxIdValidator.validate(request.customerTaxId());
+        invoice.setFinalConsumer(false);
+        invoice.setCustomerName(request.customerName().trim());
+        invoice.setCustomerTaxId(TaxIdValidator.normalize(request.customerTaxId()));
+        invoice.setCustomerEmail(blankToNull(request.customerEmail()));
+        invoice.setCustomerAddress(blankToNull(request.customerAddress()));
     }
 
     private static String blankToNull(String value) {

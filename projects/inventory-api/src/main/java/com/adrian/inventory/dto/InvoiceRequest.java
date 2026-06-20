@@ -7,6 +7,7 @@ import java.util.List;
 
 public record InvoiceRequest(
         boolean finalConsumer,
+        Long customerId,
         String customerName,
         String customerTaxId,
         String customerEmail,

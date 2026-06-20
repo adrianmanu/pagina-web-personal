@@ -8,6 +8,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5176,
+    host: true,
+    allowedHosts: ['.trycloudflare.com', '.loca.lt'],
     proxy: {
       '/api': 'http://localhost:8080',
       '/health': 'http://localhost:8080',

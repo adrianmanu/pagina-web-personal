@@ -31,6 +31,6 @@ public class AuthController {
 
     @GetMapping("/me")
     public UserResponse me(@AuthenticationPrincipal UserPrincipal principal) {
-        return UserResponse.from(principal.getUser());
+        return authService.me(principal.getUser());
     }
 }
