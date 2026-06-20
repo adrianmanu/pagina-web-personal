@@ -1,0 +1,50 @@
+# Render Blueprint — StockFlow backend + PostgreSQL
+# Dashboard → New → Blueprint → conecta este repo y usa este archivo.
+# Ajusta env vars secretas (FACTUPLAN, PAYPHONE) en el panel tras el deploy.
+
+databases:
+  - name: stockflow-db
+    plan: free
+    databaseName: stockflow
+    user: stockflow
+
+services:
+  - type: web
+    name: inventory-api
+    runtime: docker
+    rootDir: projects/inventory-api
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockflow-db
+          property: connectionString
+      - key: APP_JWT_SECRET
+        generateValue: true
+      - key: SRI_PROVIDER
+        value: factuplan
+      - key: FACTUPLAN_ENABLED
+        value: "true"
+      - key: FACTUPLAN_API_URL
+        value: https://api-rest.factuplan.com.ec
+      - key: FACTUPLAN_API_KEY
+        sync: false
+      - key: MEMBERSHIP_ENFORCEMENT
+        value: "false"
+      - key: MEMBERSHIP_TRIAL_DAYS
+        value: "14"
+      - key: PAYPHONE_ENABLED
+        value: "true"
+      - key: PAYPHONE_TOKEN
+        sync: false
+      - key: PAYPHONE_STORE_ID
+        sync: false
+      - key: PAYPHONE_RESPONSE_URL
+        value: https://adrian-ramos.pages.dev/apps/stockflow-live/membresia
+      - key: STOCKFLOW_SEED_DEMO
+        value: "true"
+      - key: DATIL_ENABLED
+        value: "false"

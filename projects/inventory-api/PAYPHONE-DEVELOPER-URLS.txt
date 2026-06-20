@@ -1,0 +1,9 @@
+Pegar en PayPhone Developer → tu app WEB → Detalles (NO en Render)
+
+Dominio web:
+http://localhost:5176
+
+URL de respuesta:
+http://localhost:5176/membresia
+
+Token y StoreID ya están en .env.render (pestaña Credenciales de PayPhone).
