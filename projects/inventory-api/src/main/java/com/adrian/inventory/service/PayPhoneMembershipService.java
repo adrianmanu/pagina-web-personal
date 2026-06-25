@@ -35,25 +35,30 @@ public class PayPhoneMembershipService {
     }
 
     @Transactional
-    public CheckoutSessionResponse prepareCheckout(User user, MembershipPlan plan) {
+    public CheckoutSessionResponse prepareCheckout(User user, MembershipPlan plan, int periodMonths) {
         requirePayPhone();
         if (plan != MembershipPlan.STARTER && plan != MembershipPlan.PRO) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Plan no válido para checkout");
         }
 
-        int amountCents = planAmountCents(plan);
+        MembershipBillingPeriod period = MembershipBillingPeriod.fromMonths(periodMonths)
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.BAD_REQUEST, "Período no válido. Usa 1, 3, 6 o 12 meses."));
+
+        int amountCents = MembershipPricing.amountCents(plan, period);
         String clientTransactionId = buildClientTransactionId();
 
         MembershipPayment payment = new MembershipPayment();
         payment.setUserId(user.getId());
         payment.setPlan(plan);
         payment.setAmountCents(amountCents);
+        payment.setPeriodDays(period.getDays());
         payment.setStatus(MembershipPaymentStatus.PENDING);
         payment.setClientTransactionId(clientTransactionId);
         payment.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
 
-        String reference = "StockFlow " + plan.name();
+        String reference = "StockFlow " + plan.name() + " " + period.getLabel();
         JsonNode prepareResult = payPhoneClient.prepareTransaction(clientTransactionId, amountCents, reference);
         String payUrl = textOrEmpty(prepareResult, "payWithCard");
         if (payUrl.isBlank()) {
@@ -82,7 +87,6 @@ public class PayPhoneMembershipService {
         }
 
         if (payment.getStatus() == MembershipPaymentStatus.APPROVED) {
-            Membership membership = membershipService.getOrCreate(user);
             MembershipStatusResponse status = membershipService.getStatus(user);
             return new PayPhoneConfirmResponse(true, "Approved", "Membresía ya activa", status);
         }
@@ -98,14 +102,16 @@ public class PayPhoneMembershipService {
             paymentRepository.save(payment);
 
             Membership membership = membershipService.getOrCreate(user);
-            membershipService.activateFromPayphone(membership, payment.getPlan(), payphoneId);
+            membershipService.activateFromPayphone(
+                    membership, payment.getPlan(), payphoneId, payment.getPeriodDays());
         } else {
             payment.setStatus(MembershipPaymentStatus.FAILED);
             paymentRepository.save(payment);
         }
 
+        int days = payment.getPeriodDays();
         String message = approved
-                ? "Pago aprobado. Membresía activa por 30 días."
+                ? "Pago aprobado. Membresía activa por " + days + " días."
                 : "Pago no aprobado: " + transactionStatus;
         MembershipStatusResponse status = membershipService.getStatus(user);
         return new PayPhoneConfirmResponse(approved, transactionStatus, message, status);
@@ -117,14 +123,6 @@ public class PayPhoneMembershipService {
                     HttpStatus.SERVICE_UNAVAILABLE,
                     "PayPhone no configurado. Defina PAYPHONE_ENABLED=true y PAYPHONE_TOKEN en el servidor.");
         }
-    }
-
-    private int planAmountCents(MembershipPlan plan) {
-        return switch (plan) {
-            case STARTER -> 1900;
-            case PRO -> 3900;
-            default -> throw new ApiException(HttpStatus.BAD_REQUEST, "Plan sin precio configurado");
-        };
     }
 
     private String buildClientTransactionId() {

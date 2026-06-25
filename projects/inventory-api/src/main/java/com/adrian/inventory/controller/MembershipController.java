@@ -69,7 +69,8 @@ public class MembershipController {
             @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody CheckoutRequest request) {
         if (payPhoneProperties.isConfigured()) {
-            return payPhoneMembershipService.prepareCheckout(principal.getUser(), request.plan());
+            return payPhoneMembershipService.prepareCheckout(
+                    principal.getUser(), request.plan(), request.periodMonths());
         }
         if (stripeProperties.isConfigured()) {
             return stripeMembershipService.createCheckoutSession(principal.getUser(), request.plan());

@@ -32,6 +32,9 @@ public class MembershipPayment {
     private int amountCents;
 
     @Column(nullable = false)
+    private int periodDays = 30;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime confirmedAt;
@@ -90,6 +93,14 @@ public class MembershipPayment {
 
     public void setAmountCents(int amountCents) {
         this.amountCents = amountCents;
+    }
+
+    public int getPeriodDays() {
+        return periodDays;
+    }
+
+    public void setPeriodDays(int periodDays) {
+        this.periodDays = periodDays;
     }
 
     public LocalDateTime getCreatedAt() {

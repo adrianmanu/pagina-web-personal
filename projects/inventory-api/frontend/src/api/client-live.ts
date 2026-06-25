@@ -39,16 +39,23 @@ export interface MembershipStatus {
   message: string;
 }
 
+export interface MembershipBillingOption {
+  periodMonths: number;
+  periodDays: number;
+  label: string;
+  priceUsd: number;
+  pricePerMonthUsd: number;
+  savingsPercent: number;
+}
+
 export interface MembershipPlan {
   id: string;
   name: string;
   description: string;
-  priceUsd: number;
-  interval: string;
-  periodDays: number;
-  billingNote: string;
+  monthlyPriceUsd: number;
   benefits: string[];
   recommended: boolean;
+  billingOptions: MembershipBillingOption[];
 }
 
 export interface CheckoutSession {
@@ -1091,10 +1098,10 @@ export const api = {
     return request<MembershipPlan[]>('/api/membership/plans');
   },
 
-  async startMembershipCheckout(plan: 'STARTER' | 'PRO') {
+  async startMembershipCheckout(plan: 'STARTER' | 'PRO', periodMonths = 1) {
     return request<CheckoutSession>('/api/membership/checkout', {
       method: 'POST',
-      body: JSON.stringify({ plan }),
+      body: JSON.stringify({ plan, periodMonths }),
     });
   },
 

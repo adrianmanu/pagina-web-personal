@@ -58,10 +58,7 @@ public class MembershipService {
                         MembershipPlan.STARTER,
                         "Starter",
                         "Ideal para negocios que empiezan a facturar electrónicamente con el SRI.",
-                        19.0,
-                        "cada 30 días",
-                        30,
-                        "Un pago único activa 30 días de uso. Renuevas cuando quieras con PayPhone.",
+                        MembershipPricing.monthlyPriceUsd(MembershipPlan.STARTER),
                         List.of(
                                 "Control de inventario y productos",
                                 "Facturas electrónicas SRI (autorizadas)",
@@ -73,15 +70,13 @@ public class MembershipService {
                                 "Clientes y catálogo para facturar más rápido",
                                 "1 usuario",
                                 "Soporte por correo (48 h hábiles)"),
-                        true),
+                        true,
+                        MembershipPricing.billingOptions(MembershipPlan.STARTER)),
                 new MembershipPlanResponse(
                         MembershipPlan.PRO,
                         "Pro",
                         "Para contadores y negocios que necesitan más comprobantes y reportes.",
-                        39.0,
-                        "cada 30 días",
-                        30,
-                        "Un pago único activa 30 días de uso. Renuevas cuando quieras con PayPhone.",
+                        MembershipPricing.monthlyPriceUsd(MembershipPlan.PRO),
                         List.of(
                                 "Todo lo incluido en Starter",
                                 "Exportación ATS (anexo transaccional SRI)",
@@ -91,7 +86,8 @@ public class MembershipService {
                                 "Múltiples usuarios con roles (admin y operador)",
                                 "Retenciones y comprobantes avanzados",
                                 "Soporte prioritario (24 h hábiles)"),
-                        false));
+                        false,
+                        MembershipPricing.billingOptions(MembershipPlan.PRO)));
     }
 
     public boolean canEmit(User user) {
@@ -117,14 +113,14 @@ public class MembershipService {
     }
 
     @Transactional
-    public void activateFromPayphone(Membership membership, MembershipPlan plan, Long transactionId) {
+    public void activateFromPayphone(Membership membership, MembershipPlan plan, Long transactionId, int periodDays) {
         LocalDateTime now = LocalDateTime.now();
         membership.setPlan(plan);
         membership.setStatus(MembershipStatus.ACTIVE);
         membership.setProvider(BillingProvider.PAYPHONE);
         membership.setStripeCustomerId(null);
         membership.setStripeSubscriptionId(transactionId != null ? transactionId.toString() : null);
-        membership.setCurrentPeriodEnd(now.plusDays(30));
+        membership.setCurrentPeriodEnd(now.plusDays(periodDays));
         membership.setUpdatedAt(now);
         membershipRepository.save(membership);
     }

@@ -1537,15 +1537,24 @@ export const api = {
 
   async getMembershipPlans() {
     await delay();
+    const starterOptions = [
+      { periodMonths: 1, periodDays: 30, label: '1 mes', priceUsd: 19, pricePerMonthUsd: 19, savingsPercent: 0 },
+      { periodMonths: 3, periodDays: 90, label: '3 meses', priceUsd: 54.15, pricePerMonthUsd: 18.05, savingsPercent: 5 },
+      { periodMonths: 6, periodDays: 180, label: '6 meses', priceUsd: 102.6, pricePerMonthUsd: 17.1, savingsPercent: 10 },
+      { periodMonths: 12, periodDays: 365, label: '1 año', priceUsd: 193.8, pricePerMonthUsd: 16.15, savingsPercent: 15 },
+    ];
+    const proOptions = [
+      { periodMonths: 1, periodDays: 30, label: '1 mes', priceUsd: 39, pricePerMonthUsd: 39, savingsPercent: 0 },
+      { periodMonths: 3, periodDays: 90, label: '3 meses', priceUsd: 111.15, pricePerMonthUsd: 37.05, savingsPercent: 5 },
+      { periodMonths: 6, periodDays: 180, label: '6 meses', priceUsd: 210.6, pricePerMonthUsd: 35.1, savingsPercent: 10 },
+      { periodMonths: 12, periodDays: 365, label: '1 año', priceUsd: 397.8, pricePerMonthUsd: 33.15, savingsPercent: 15 },
+    ];
     return [
       {
         id: 'STARTER',
         name: 'Starter',
         description: 'Ideal para negocios que empiezan a facturar electrónicamente con el SRI.',
-        priceUsd: 19,
-        interval: 'cada 30 días',
-        periodDays: 30,
-        billingNote: 'En modo demo el pago está deshabilitado. En producción se cobra con PayPhone.',
+        monthlyPriceUsd: 19,
         benefits: [
           'Control de inventario y productos',
           'Facturas electrónicas SRI',
@@ -1555,15 +1564,13 @@ export const api = {
           '1 usuario',
         ],
         recommended: true,
+        billingOptions: starterOptions,
       },
       {
         id: 'PRO',
         name: 'Pro',
         description: 'Para contadores y negocios con más comprobantes y reportes.',
-        priceUsd: 39,
-        interval: 'cada 30 días',
-        periodDays: 30,
-        billingNote: 'En modo demo el pago está deshabilitado. En producción se cobra con PayPhone.',
+        monthlyPriceUsd: 39,
         benefits: [
           'Todo lo incluido en Starter',
           'Exportación ATS',
@@ -1572,11 +1579,12 @@ export const api = {
           'Soporte prioritario',
         ],
         recommended: false,
+        billingOptions: proOptions,
       },
     ] satisfies import('./client-live').MembershipPlan[];
   },
 
-  async startMembershipCheckout(_plan: 'STARTER' | 'PRO') {
+  async startMembershipCheckout(_plan: 'STARTER' | 'PRO', _periodMonths = 1) {
     await delay();
     return {
       checkoutUrl: null,
