@@ -86,27 +86,59 @@ Login: `POST /api/auth/login` con `demo@stockflow.dev` / `demo1234` (si `STOCKFL
 
 ---
 
-## 3. Frontend conectado al servidor
+## 3. Frontend en Cloudflare Pages (modo live)
 
-En tu máquina o en un segundo deploy de Cloudflare Pages:
+El script `npm run build:freelance` (raíz del repo) compila **dos** versiones de StockFlow:
+
+| Ruta | Modo | URL ejemplo |
+|------|------|-------------|
+| `/apps/inventory-api/` | Demo en navegador | `https://adrian-ramos.pages.dev/apps/inventory-api/` |
+| `/apps/stockflow-live/` | API Render real | `https://adrian-ramos.pages.dev/apps/stockflow-live/` |
+
+### Cloudflare (tu portafolio actual)
+
+Si ya tienes el proyecto conectado a Cloudflare Pages:
+
+| Campo | Valor |
+|-------|-------|
+| Build command | `npm run build:freelance` |
+| Build output | `dist` |
+| Node version | 20 |
+
+Al hacer **push** a `main`, Cloudflare reconstruye y publica ambas rutas.
+
+Variable opcional en Cloudflare (si cambias la API):
+
+`STOCKFLOW_API_URL` = `https://stockflow-apix.onrender.com`
+
+### Build manual local
+
+```powershell
+cd "d:\Postular\Pagina web_personal"
+npm run build:freelance
+```
+
+O solo StockFlow live:
+
+```powershell
+.\projects\inventory-api\scripts\build-stockflow-live.ps1 -ApiBaseUrl "https://stockflow-apix.onrender.com" -BasePath "/apps/stockflow-live/"
+```
+
+Sube `dist/apps/stockflow-live/` a tu hosting en esa ruta.
+
+---
+
+## 4. Frontend local (desarrollo)
 
 ```powershell
 cd projects/inventory-api/frontend
 copy .env.example .env
 # Edita .env:
 #   VITE_USE_LIVE_API=true
-#   VITE_API_BASE_URL=https://tu-api.onrender.com
+#   VITE_API_BASE_URL=https://stockflow-apix.onrender.com
 
 npm ci
-npm run build
-```
-
-Sube la carpeta `dist/` a una ruta como `/apps/stockflow-live/` en Cloudflare o GitHub Pages.
-
-**Script incluido:**
-
-```powershell
-.\scripts\build-stockflow-live.ps1 -ApiBaseUrl "https://tu-api.onrender.com" -BasePath "/apps/stockflow-live/"
+npm run dev
 ```
 
 ---

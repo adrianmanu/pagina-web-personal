@@ -441,11 +441,13 @@ const PROJECTS: Project[] = [
     imageGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     highlights: [
       'Demo en portafolio sin servidor — un clic y listo',
+      'Versión live en Cloudflare con API Render y SRI real (pruebas)',
       'Facturación SRI: facturas, NC/ND, guías y retenciones',
       'Membresías con PayPhone (Ecuador) y trial 14 días',
       'Modo servidor con Factuplan ak_test_ para pruebas reales',
       'Exportación PDF/Excel desde dashboard y facturación',
     ],
+    serverAppUrl: 'apps/stockflow-live/',
   },
   {
     id: 'metrics-dashboard',

@@ -15,6 +15,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
     ? resolveGithubTreeUrl(project.githubPath)
     : project.githubUrl;
   const liveUrl = project.liveUrl ? resolvePublicUrl(project.liveUrl) : undefined;
+  const serverAppUrl = project.serverAppUrl
+    ? resolvePublicUrl(project.serverAppUrl)
+    : undefined;
   const apkUrl =
     project.apkUrl && !(isMobile && liveUrl)
       ? resolvePublicUrl(project.apkUrl)
@@ -107,6 +110,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
               className="project-card__link project-card__link--live"
             >
               <ExternalLink size={16} /> Ver proyecto
+            </a>
+          )}
+          {serverAppUrl && (
+            <a
+              href={serverAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-card__link project-card__link--live"
+            >
+              <ExternalLink size={16} /> Servidor live
             </a>
           )}
         </div>

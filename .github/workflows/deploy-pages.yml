@@ -69,11 +69,24 @@ jobs:
         run: npm ci
         working-directory: projects/inventory-api/frontend
 
-      - name: Build inventario frontend
+      - name: Build inventario frontend (demo)
         run: npm run build
         working-directory: projects/inventory-api/frontend
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/inventory-api/
+
+      - name: Guardar build demo inventario
+        run: |
+          rm -rf /tmp/stockflow-demo-dist
+          cp -r projects/inventory-api/frontend/dist /tmp/stockflow-demo-dist
+
+      - name: Build StockFlow live (API Render)
+        run: npm run build
+        working-directory: projects/inventory-api/frontend
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/apps/stockflow-live/
+          VITE_USE_LIVE_API: 'true'
+          VITE_API_BASE_URL: https://stockflow-apix.onrender.com
 
       - name: Instalar dependencias task manager
         run: npm ci
@@ -94,7 +107,9 @@ jobs:
           mkdir -p deploy/apps/automatizacion-datos
           cp -r projects/automatizacion-datos/frontend/dist/* deploy/apps/automatizacion-datos/
           mkdir -p deploy/apps/inventory-api
-          cp -r projects/inventory-api/frontend/dist/* deploy/apps/inventory-api/
+          cp -r /tmp/stockflow-demo-dist/* deploy/apps/inventory-api/
+          mkdir -p deploy/apps/stockflow-live
+          cp -r projects/inventory-api/frontend/dist/* deploy/apps/stockflow-live/
           mkdir -p deploy/apps/task-manager
           cp -r projects/task-manager-api/frontend/dist/* deploy/apps/task-manager/
 

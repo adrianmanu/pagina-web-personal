@@ -1,34 +1,26 @@
-# Subir variables a Render (1 solo paso tuyo)
+# Subir variables a Render
 
-Los archivos ya están listos. **No puedo entrar a tu panel Render**; tú solo subes el archivo.
+> **Si aún no tienes el servicio Docker de StockFlow**, sigue primero:
+> **[RENDER-NUEVO-SERVICIO.md](./RENDER-NUEVO-SERVICIO.md)** (crear web service + Postgres + env completo).
 
-## Paso único en Render
+## Cuando ya exista `stockflow-api` (Docker)
 
-1. [dashboard.render.com](https://dashboard.render.com)
-2. Abre el **Web Service** cuya URL es `https://inventory-api-ous5.onrender.com`
-3. Pestaña **Environment**
-4. **Edit** → borra variables viejas si quedan: `PYTHON_VERSION`, `SECRET_KEY`, `CORS_ORIGINS`
-5. **Add from .env** (o pega el contenido del archivo)
-6. Archivo a subir:
-
-   `projects/inventory-api/.env.render`
-
-7. **Save Changes** → espera estado **Live**
+1. [dashboard.render.com](https://dashboard.render.com) → servicio **`stockflow-api`** (no `pagina-web-personal`).
+2. Pestaña **Environment** → **Edit**.
+3. Borra variables viejas si quedan: `PYTHON_VERSION`, `SECRET_KEY`, `CORS_ORIGINS`.
+4. **Add from .env** → archivo local `projects/inventory-api/.env.render`.
+5. **Save Changes** → espera estado **Live**.
 
 ## Probar
 
 ```powershell
-Invoke-RestMethod "https://inventory-api-ous5.onrender.com/health"
+Invoke-RestMethod "https://TU-URL.onrender.com/health"
 cd projects/inventory-api/frontend
 npm run dev
 ```
 
 Login: `demo@stockflow.dev` / `demo1234`
 
-## PayPhone (navegador, no es .env)
+## PayPhone
 
-Ver `PAYPHONE-DEVELOPER-URLS.txt` y pegar las 2 URLs en la app WEB de PayPhone Developer.
-
-## Factuplan
-
-Nada que pegar: la API key ya está en `.env.render`.
+Ver `PAYPHONE-DEVELOPER-URLS.txt` y pegar las URLs en PayPhone Developer.

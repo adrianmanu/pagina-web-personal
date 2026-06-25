@@ -19,6 +19,8 @@ export interface Project {
   githubUrl?: string;
   githubPath?: string;
   liveUrl?: string;
+  /** App SPA desplegada con backend real (ej. /apps/stockflow-live/) */
+  serverAppUrl?: string;
   apkUrl?: string;
   demoVideoUrl?: string;
   imageGradient: string;

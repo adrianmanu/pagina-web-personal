@@ -1,9 +1,19 @@
 Pegar en PayPhone Developer → tu app WEB → Detalles (NO en Render)
 
 Dominio web:
-http://localhost:5176
+https://adrian-ramos.pages.dev
 
 URL de respuesta:
-http://localhost:5176/membresia
+https://adrian-ramos.pages.dev/apps/stockflow-live/membresia
+
+En Render (Environment), PAYPHONE_RESPONSE_URL debe ser la misma URL de respuesta.
 
 Token y StoreID ya están en .env.render (pestaña Credenciales de PayPhone).
+
+Frontend live (Cloudflare):
+https://adrian-ramos.pages.dev/apps/stockflow-live/
+
+API (Render):
+https://stockflow-apix.onrender.com
+
+Login demo: demo@stockflow.dev / demo1234

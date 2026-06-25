@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByUserIdOrderByIdDesc(Long userId);
 
+    long countByUserId(Long userId);
+
     List<Invoice> findByCustomerIdOrderByIdDesc(Long customerId);
 
     long countByCustomerId(Long customerId);

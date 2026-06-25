@@ -8,7 +8,7 @@ function run(command, cwd = root) {
   execSync(command, { cwd, stdio: 'inherit' });
 }
 
-function buildDemo(label, projectDir, basePath, targetDir) {
+function buildDemo(label, projectDir, basePath, targetDir, extraEnv = {}) {
   console.log(`\n📦 Compilando ${label}...`);
   const absoluteProjectDir = resolve(root, projectDir);
 
@@ -21,7 +21,7 @@ function buildDemo(label, projectDir, basePath, targetDir) {
   execSync('npm run build', {
     cwd: absoluteProjectDir,
     stdio: 'inherit',
-    env: { ...process.env, VITE_BASE_PATH: basePath },
+    env: { ...process.env, VITE_BASE_PATH: basePath, ...extraEnv },
   });
 
   const target = resolve(root, 'dist', targetDir);
@@ -45,6 +45,18 @@ buildDemo(
   'projects/inventory-api/frontend',
   '/apps/inventory-api/',
   'apps/inventory-api',
+);
+buildDemo(
+  'StockFlow Live',
+  'projects/inventory-api/frontend',
+  '/apps/stockflow-live/',
+  'apps/stockflow-live',
+  {
+    VITE_USE_LIVE_API: 'true',
+    VITE_API_BASE_URL:
+      process.env.STOCKFLOW_API_URL?.replace(/\/$/, '') ||
+      'https://stockflow-apix.onrender.com',
+  },
 );
 buildDemo(
   'TaskFlow',
