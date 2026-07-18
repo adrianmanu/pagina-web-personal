@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockFlow — Guía y demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">Spring Boot · React · SRI Ecuador · Inventario</span>
+    <h1>StockFlow — Inventario y facturación SRI</h1>
+    <p class="subtitle">
+      Plataforma SaaS para control de stock, facturación electrónica con el SRI (Factuplan)
+      y membresías con PayPhone. Esta demo funciona en el navegador sin instalar nada.
+    </p>
+
+    <div class="card">
+      <h2>¿Qué hace este sistema?</h2>
+      <p>
+        <strong>StockFlow</strong> gestiona inventario, clientes, proveedores y emite comprobantes
+        electrónicos (facturas, notas de crédito/débito, guías, retenciones, ATS). La demo del
+        portafolio simula el flujo completo en tu navegador. El backend Spring Boot real se
+        despliega en un servidor para pruebas con Factuplan y PayPhone.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Qué puedes probar en la demo</h2>
+      <ul class="feature-list">
+        <li>Entrar con un clic — cuenta demo precargada</li>
+        <li>Dashboard con KPIs, stock bajo y ventas recientes</li>
+        <li>Productos, clientes, proformas y facturación con descuento de stock</li>
+        <li>Facturas con estado SRI simulado (AUTORIZADO)</li>
+        <li>Notas de crédito/débito, guías, retenciones, liquidaciones, ATS</li>
+        <li>Configuración SRI y membresía (simuladas en demo)</li>
+        <li>Exportar inventario y facturas en PDF o Excel</li>
+      </ul>
+      <div class="tech">
+        <span>React</span><span>Spring Boot</span><span>Factuplan</span><span>PayPhone</span><span>JWT</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guía rápida</h2>
+      <ol class="steps">
+        <li><strong>Entra con demo</strong> — botón en el login o credenciales abajo.</li>
+        <li><strong>Dashboard</strong> — revisa KPIs y ventas de ejemplo.</li>
+        <li><strong>Facturación</strong> — emite una venta y verifica el descuento de stock.</li>
+        <li><strong>Documentos</strong> — explora notas, guías y retenciones.</li>
+        <li><strong>Restablecer</strong> — banner verde arriba para volver a datos iniciales.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Credenciales de demo</h2>
+      <div class="note">
+        Correo: <code>demo@stockflow.dev</code> · Contraseña: <code>demo1234</code><br />
+        Los datos se guardan en tu navegador. No se conecta a servidores ni al SRI real.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Modo servidor (pruebas reales)</h2>
+      <p>
+        Versión conectada al backend en Render: Factuplan (<code>ak_test_</code>), PayPhone y emisión SRI
+        en ambiente de pruebas. Usa la misma cuenta demo.
+      </p>
+      <div class="btn-row" style="margin-top: 1rem;">
+        <a class="btn btn-primary" data-app-url="apps/stockflow-live/">Abrir StockFlow en servidor</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Documentación técnica</h2>
+      <p>
+        Guía de despliegue: <code>projects/inventory-api/SETUP-PRODUCCION.md</code> en el repositorio.
+      </p>
+    </div>
+
+    <div class="cta">
+      <h2>¿Listo para probarlo?</h2>
+      <p>Explora el flujo completo de inventario y facturación sin instalar nada.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" data-app-url="apps/inventory-api/">Probar demo interactiva</a>
+        <a class="btn btn-secondary" data-github-path="projects/inventory-api" target="_blank" rel="noopener">Ver código</a>
+      </div>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+</body>
+</html>

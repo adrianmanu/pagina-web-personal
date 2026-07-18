@@ -1,0 +1,5 @@
+/apps/task-manager/* /apps/task-manager/index.html 200
+/apps/inventory-api/* /apps/inventory-api/index.html 200
+/apps/stockflow-live/* /apps/stockflow-live/index.html 200
+/apps/automatizacion-datos/* /apps/automatizacion-datos/index.html 200
+/metrics-dashboard/* /metrics-dashboard/index.html 200

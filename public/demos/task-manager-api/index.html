@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Guía y demo</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="#">← Volver al portafolio</a>
+    <span class="badge">Node.js · Express · React · JWT · Kanban</span>
+    <h1>TaskFlow — Gestión de Tareas</h1>
+    <p class="subtitle">
+      Aplicación full stack con tablero kanban, prioridades, fechas límite
+      y dashboard de productividad.
+    </p>
+
+    <div class="card">
+      <h2>¿Qué hace este sistema?</h2>
+      <p>
+        <strong>TaskFlow</strong> organiza el trabajo en un tablero visual tipo kanban: tareas con
+        estados, prioridades y vencimientos, más un dashboard con métricas de productividad.
+        La demo corre en el navegador con autenticación simulada; el backend Node.js + Express
+        completo está en el repositorio para despliegue local.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Qué puedes hacer en la demo</h2>
+      <ul class="feature-list">
+        <li>Registrarte o iniciar sesión con cuenta demo</li>
+        <li>Ver KPIs: tareas vencidas, % completado y próximos vencimientos</li>
+        <li>Gestionar tareas en tablero kanban (Por hacer, En progreso, Hecho)</li>
+        <li>Asignar prioridad alta, media o baja y fechas límite</li>
+        <li>Filtrar tareas por prioridad o estado</li>
+        <li>Exportar listado de tareas y resumen del dashboard en PDF o Excel</li>
+      </ul>
+      <div class="tech">
+        <span>React</span><span>JWT</span><span>Kanban</span><span>localStorage</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guía rápida de uso</h2>
+      <ol class="steps">
+        <li>
+          <strong>Inicia sesión</strong>
+          Usa «Entrar con demo» o las credenciales indicadas abajo.
+        </li>
+        <li>
+          <strong>Revisa el dashboard</strong>
+          Consulta estadísticas generales y tareas próximas a vencer.
+        </li>
+        <li>
+          <strong>Abre el tablero kanban</strong>
+          Crea una tarea nueva con título, prioridad y fecha límite.
+        </li>
+        <li>
+          <strong>Mueve tareas entre columnas</strong>
+          Arrastra o usa acciones para cambiar el estado (Por hacer → En progreso → Hecho).
+        </li>
+        <li>
+          <strong>Exporta tu trabajo</strong>
+          Desde Dashboard o Tablero, genera un reporte PDF o Excel.
+        </li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Credenciales de demo</h2>
+      <div class="note">
+        Correo: <code>demo@taskflow.dev</code> · Contraseña: <code>demo1234</code><br />
+        También puedes crear una cuenta nueva; los datos se almacenan localmente.
+      </div>
+    </div>
+
+    <div class="cta">
+      <h2>¿Listo para probarlo?</h2>
+      <p>Prueba el flujo completo de gestión de tareas sin configurar servidores.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" data-app-url="apps/task-manager/">Probar demo interactiva</a>
+        <a class="btn btn-secondary" data-github-path="projects/task-manager-api" target="_blank" rel="noopener">Ver código</a>
+      </div>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="../demo.js"></script>
+</body>
+</html>
